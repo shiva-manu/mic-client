@@ -8,67 +8,54 @@
 :root {
   font-family: 'Geist Variable', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Neural Tech Palette */
-  --tech-midnight: #020617;
-  --tech-cobalt: #2563eb;
-  --tech-cyan: #06b6d4;
-  --tech-slate: #f8fafc;
+  --background: #09090b;
+  --foreground: #fafafa;
 
-  --background: #ffffff;
-  --foreground: #020617;
+  --card: #0f0f12;
+  --card-foreground: #fafafa;
 
-  --card: #f1f5f9;
-  --card-foreground: #020617;
+  --popover: #0f0f12;
+  --popover-foreground: #fafafa;
 
-  --popover: #ffffff;
-  --popover-foreground: #020617;
-
-  --primary: #2563eb;
+  --primary: #7c3aed;
   --primary-foreground: #ffffff;
 
-  --secondary: #06b6d4;
-  --secondary-foreground: #ffffff;
+  --secondary: #18181b;
+  --secondary-foreground: #fafafa;
 
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted: #18181b;
+  --muted-foreground: #71717a;
 
-  --accent: #3b82f6;
-  --accent-foreground: #ffffff;
+  --accent: #18181b;
+  --accent-foreground: #fafafa;
 
-  --destructive: oklch(0.4 0.2 25);
+  --destructive: #ef4444;
 
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #2563eb;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #7c3aed;
 
   --radius: 0.75rem;
 }
 
 .dark {
-  --background: #020617;
-  --foreground: #f8fafc;
-
-  --card: #0f172a;
-  --card-foreground: #f8fafc;
-
-  --popover: #0f172a;
-  --popover-foreground: #e2e8f0;
-
-  --primary: #3b82f6;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #0f0f12;
+  --card-foreground: #fafafa;
+  --popover: #0f0f12;
+  --popover-foreground: #fafafa;
+  --primary: #7c3aed;
   --primary-foreground: #ffffff;
-
-  --secondary: #22d3ee;
-  --secondary-foreground: #020617;
-
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-
-  --accent: #1d4ed8;
-  --accent-foreground: #ffffff;
-
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #60a5fa;
+  --secondary: #18181b;
+  --secondary-foreground: #fafafa;
+  --muted: #18181b;
+  --muted-foreground: #71717a;
+  --accent: #18181b;
+  --accent-foreground: #fafafa;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #7c3aed;
 }
 
 @theme inline {
@@ -103,7 +90,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
 
   html {
@@ -112,12 +99,32 @@
 }
 
 @layer utilities {
-  .outline-text {
-    -webkit-text-stroke: 1.5px currentColor;
-    color: transparent;
+
+  /* Soft radial spotlight — use behind hero or sections */
+  .spotlight {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .gradient-neural {
-    background: linear-gradient(135deg, var(--tech-cobalt), var(--tech-cyan));
+  /* Grain texture overlay for premium feel */
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Fade-in mask for gradient edges */
+  .fade-edge-b {
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   }
 }

@@ -1,57 +1,128 @@
 import Hero from '@/components/Hero';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Leaf, Brain, Network, Calendar, Users, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+
+import type { Easing } from "framer-motion";
+
+const fadeUp = {
+    hidden: { opacity: 0, y: 24 },
+    visible: (i: number) => ({
+        opacity: 1, y: 0,
+        transition: { delay: i * 0.08, duration: 0.5, ease: "easeOut" as Easing }
+    })
+};
+
+const features = [
+    { icon: Leaf, title: "Eco-AI", desc: "Energy-efficient algorithms inspired by nature.", color: "text-emerald-400", bg: "bg-emerald-500/10" },
+    { icon: Brain, title: "Neural Systems", desc: "Biologically inspired neural architectures.", color: "text-violet-400", bg: "bg-violet-500/10" },
+    { icon: Network, title: "Adaptive ML", desc: "Robust, self-improving machine learning.", color: "text-blue-400", bg: "bg-blue-500/10" },
+];
+
+const bento = [
+    {
+        title: "Upcoming Events",
+        desc: "Hackathons, workshops, and symposiums pushing the frontier of AI research.",
+        icon: Calendar, link: "/events", span: "md:col-span-2",
+        img: "/images/event1.png"
+    },
+    {
+        title: "Our Team",
+        desc: "Led by passionate students and guided by experienced faculty advisors.",
+        icon: Users, link: "/board", span: "md:col-span-1",
+        img: "/images/board.png"
+    },
+    {
+        title: "Research Focus",
+        desc: "Sustainable AI, biomimetic computing, and adaptive neural systems.",
+        icon: Sparkles, link: "/advisory", span: "md:col-span-1",
+        img: "/images/advisor.png"
+    },
+    {
+        title: "Event Archive",
+        desc: "Browse our history of technical milestones and community achievements.",
+        icon: Calendar, link: "/completed-events", span: "md:col-span-2",
+        img: "/images/event2.png"
+    },
+];
 
 const Home = () => {
     return (
-        <div className="flex flex-col">
+        <div className="bg-transparent text-white">
             <Hero />
 
-            {/* Featured Section */}
-            <section className="py-20 border-y border-primary/10 bg-muted/10 overflow-hidden">
-                <div className="w-full px-4 sm:px-8 lg:px-12">
+            {/* Features */}
+            <section className="relative py-24">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        variants={{
-                            visible: { transition: { staggerChildren: 0.1 } },
-                            hidden: {}
-                        }}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-16"
+                        viewport={{ once: true, margin: "-80px" }}
+                        className="grid sm:grid-cols-3 gap-4"
                     >
-                        {[
-                            { title: "Eco-AI", color: "text-primary", bg: "bg-primary/20", icon: "https://cdn-icons-png.flaticon.com/512/2913/2913520.png", desc: "Developing energy-efficient algorithms inspired by biological resource management.", link: "/advisory", linkText: "Learn More" },
-                            { title: "Biology", color: "text-secondary", bg: "bg-secondary/20", icon: "https://cdn-icons-png.flaticon.com/512/3067/3067185.png", desc: "A community exploring neural inspiration and biomimetic interface engineering.", link: "/board", linkText: "The Board" },
-                            { title: "Systems", color: "text-primary", bg: "bg-primary/20", icon: "https://cdn-icons-png.flaticon.com/512/900/900618.png", desc: "Building the next generation of robust, adaptive Machine Intelligence frameworks.", link: "/events", linkText: "View Events" }
-                        ].map((card, i) => (
-                            <motion.div
-                                key={i}
-                                variants={{
-                                    hidden: { opacity: 0, y: 30 },
-                                    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
-                                }}
-                                whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                                className="space-y-6 group"
-                            >
-                                <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center p-2 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-black/5", card.bg, i === 1 ? "group-hover:bg-secondary" : "group-hover:bg-primary")}>
-                                    <img src={card.icon} alt={card.title} className="h-full w-full grayscale group-hover:grayscale-0 transition-all brightness-0 dark:invert" />
+                        {features.map((f, i) => (
+                            <motion.div key={i} custom={i} variants={fadeUp} className="group rounded-2xl border border-border/50 bg-card/50 p-6 hover:border-border hover:bg-card transition-all duration-300">
+                                <div className={`w-10 h-10 rounded-xl ${f.bg} flex items-center justify-center mb-4`}>
+                                    <f.icon className={`w-5 h-5 ${f.color}`} />
                                 </div>
-                                <h3 className={cn("text-2xl font-black uppercase tracking-tight", card.color)}>{card.title}</h3>
-                                <p className="text-muted-foreground leading-relaxed font-medium text-sm">
-                                    {card.desc}
-                                </p>
-                                <Link to={card.link} className={cn("inline-flex items-center gap-2 font-bold uppercase tracking-wider text-[10px] group-hover:gap-4 transition-all duration-300", card.color)}>
-                                    {card.linkText} <ArrowRight className="h-3 w-3" />
-                                </Link>
+                                <h3 className="font-semibold text-foreground mb-1">{f.title}</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
                             </motion.div>
                         ))}
                     </motion.div>
                 </div>
             </section>
 
+            {/* Bento Grid */}
+            <section className="relative pb-32">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="mb-10"
+                    >
+                        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+                            Explore <span className="text-primary">MIC</span>
+                        </h2>
+                        <p className="text-muted-foreground mt-2 text-sm max-w-md">Dive into our community, events, and research initiatives.</p>
+                    </motion.div>
+
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-60px" }}
+                        className="grid md:grid-cols-3 gap-4"
+                    >
+                        {bento.map((b, i) => (
+                            <motion.div key={i} custom={i} variants={fadeUp} className={b.span}>
+                                <Link
+                                    to={b.link}
+                                    className="group relative block rounded-2xl border border-border/50 bg-card/50 overflow-hidden hover:border-border hover:bg-card transition-all duration-300 h-full"
+                                >
+                                    {/* Image */}
+                                    <div className="h-40 overflow-hidden relative">
+                                        <img src={b.img} alt={b.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-5">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <b.icon className="w-4 h-4 text-primary" />
+                                            <h3 className="font-semibold text-sm">{b.title}</h3>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
+                                        <div className="flex items-center gap-1 mt-4 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                                            View <ArrowRight className="w-3 h-3" />
+                                        </div>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </div>
+            </section>
         </div>
     );
 };

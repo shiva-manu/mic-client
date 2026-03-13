@@ -1,143 +1,134 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowRight, ChevronRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Link } from "react-router-dom";
+import AgentModel from "@/components/AgentModel";
 
-const TypewriterTitle = () => {
-    const lines = [
-        { text: "Machine", color: "text-primary" },
-        { text: "Intelligence", color: "text-primary" },
-        { text: "Club", color: "text-secondary" }
-    ];
-
-    const [currentLineIndex, setCurrentLineIndex] = useState(0);
-    const [currentCharIndex, setCurrentCharIndex] = useState(0);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [displayedLines, setDisplayedLines] = useState(["", "", ""]);
+/* ── Typewriter ── */
+const useTypewriter = (words: string[], typingSpeed = 80, deletingSpeed = 40, pause = 2500) => {
+    const [text, setText] = useState("");
+    const [wordIdx, setWordIdx] = useState(0);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
-        let timeout: ReturnType<typeof setTimeout>;
-
-        const handleType = () => {
-            if (!isDeleting) {
-                if (currentLineIndex < lines.length) {
-                    if (currentCharIndex < lines[currentLineIndex].text.length) {
-                        // Typing character
-                        const newDisplayedLines = [...displayedLines];
-                        newDisplayedLines[currentLineIndex] = lines[currentLineIndex].text.substring(0, currentCharIndex + 1);
-                        setDisplayedLines(newDisplayedLines);
-                        setCurrentCharIndex(currentCharIndex + 1);
-                        timeout = setTimeout(handleType, 100);
-                    } else {
-                        // Next line
-                        setCurrentLineIndex(currentLineIndex + 1);
-                        setCurrentCharIndex(0);
-                        timeout = setTimeout(handleType, 200);
-                    }
-                } else {
-                    // All typed, pause
-                    timeout = setTimeout(() => setIsDeleting(true), 2500);
-                }
+        const word = words[wordIdx];
+        const timeout = setTimeout(() => {
+            if (!deleting) {
+                setText(word.slice(0, text.length + 1));
+                if (text.length + 1 === word.length) setTimeout(() => setDeleting(true), pause);
             } else {
-                if (currentLineIndex >= lines.length) {
-                    // Start deleting from the last line
-                    setCurrentLineIndex(lines.length - 1);
-                    setCurrentCharIndex(lines[lines.length - 1].text.length);
-                    timeout = setTimeout(handleType, 100);
-                } else if (currentLineIndex >= 0) {
-                    if (currentCharIndex > 0) {
-                        // Deleting character
-                        const newDisplayedLines = [...displayedLines];
-                        newDisplayedLines[currentLineIndex] = lines[currentLineIndex].text.substring(0, currentCharIndex - 1);
-                        setDisplayedLines(newDisplayedLines);
-                        setCurrentCharIndex(currentCharIndex - 1);
-                        timeout = setTimeout(handleType, 50);
-                    } else {
-                        // Previous line
-                        if (currentLineIndex > 0) {
-                            setCurrentLineIndex(currentLineIndex - 1);
-                            setCurrentCharIndex(lines[currentLineIndex - 1].text.length);
-                            timeout = setTimeout(handleType, 50);
-                        } else {
-                            // All deleted, pause
-                            timeout = setTimeout(() => {
-                                setIsDeleting(false);
-                                setCurrentLineIndex(0);
-                                setCurrentCharIndex(0);
-                                setDisplayedLines(["", "", ""]);
-                            }, 500);
-                        }
-                    }
-                }
+                setText(word.slice(0, text.length - 1));
+                if (text.length - 1 === 0) { setDeleting(false); setWordIdx((i) => (i + 1) % words.length); }
             }
-        };
-
-        timeout = setTimeout(handleType, 100);
+        }, deleting ? deletingSpeed : typingSpeed);
         return () => clearTimeout(timeout);
-    }, [currentLineIndex, currentCharIndex, isDeleting, displayedLines]);
+    }, [text, deleting, wordIdx, words, typingSpeed, deletingSpeed, pause]);
 
-    return (
-        <h1 className="text-3xl leading-[0.9] sm:text-6xl md:text-[80px] lg:text-[100px] font-black tracking-tighter md:leading-[0.85] uppercase">
-            {lines.map((line, idx) => (
-                <span key={idx} className={cn("block", line.color)}>
-                    {displayedLines[idx]}
-                </span>
-            ))}
-        </h1>
-    );
+    return text;
 };
 
-const Hero = () => {
-    return (
-        <section className="relative overflow-hidden pt-16 pb-20 md:pt-32 md:pb-40 bg-background">
-            <div className="w-full px-4 sm:px-8 lg:px-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    <div className="lg:col-span-8 flex flex-col gap-6 text-left">
-                        <TypewriterTitle />
-                        <p className="text-lg md:text-2xl text-muted-foreground max-w-[700px] font-medium leading-relaxed">
-                            Merging organic wisdom with computational excellence. We explore the synergy between biological logic and machine learning.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                            <Button size="lg" className="rounded-md h-12 md:h-14 px-8 md:px-10 text-sm font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:opacity-90 transition-all shadow-md shadow-primary/10">
-                                Explore Events
-                            </Button>
-                            <Button size="lg" variant="outline" className="rounded-md h-12 md:h-14 px-8 md:px-10 text-sm font-bold uppercase tracking-widest border-2 border-primary text-primary hover:bg-primary/5 transition-all">
-                                Join Now <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="lg:col-span-4 self-center hidden lg:block">
-                        <div className="relative group">
-                            <div className="absolute -inset-4 bg-primary/10 rounded-2xl blur-2xl opacity-40 group-hover:opacity-60 transition-opacity" />
-                            <div className="relative rounded-2xl overflow-hidden border-4 border-primary/20 bg-muted/30 p-2">
-                                <img
-                                    src="/images/hero.png"
-                                    alt="MIC Hero"
-                                    className="w-full h-auto object-cover grayscale opacity-80"
-                                />
-                            </div>
-                        </div>
-                        <div className="mt-10 space-y-3">
-                            <div className="flex justify-between border-b border-primary/20 pb-2 font-bold uppercase tracking-tight text-xs text-primary/80">
-                                <span>Founded</span>
-                                <span className="text-secondary font-black">2024</span>
-                            </div>
-                            <div className="flex justify-between border-b border-primary/20 pb-2 font-bold uppercase tracking-tight text-xs text-primary/80">
-                                <span>Active Members</span>
-                                <span className="text-secondary font-black">500+</span>
-                            </div>
-                            <div className="flex justify-between border-b border-primary/20 pb-2 font-bold uppercase tracking-tight text-xs text-primary/80">
-                                <span>Location</span>
-                                <span className="text-secondary font-black">Tech Lab 01</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+/* ── Marquee logos ── */
+const partners = ["TensorFlow", "PyTorch", "OpenAI", "Hugging Face", "Google Cloud", "IEEE", "SNIST"];
+const Marquee = () => (
+    <div className="relative overflow-hidden py-6 border-t border-border/50">
+        <div className="flex animate-[scroll_20s_linear_infinite] gap-16 whitespace-nowrap">
+            {[...partners, ...partners].map((p, i) => (
+                <span key={i} className="text-sm text-muted-foreground/50 font-medium tracking-wide uppercase">{p}</span>
+            ))}
+        </div>
+        <style>{`@keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+    </div>
+);
 
-            {/* Organic Shapes Background */}
-            <div className="absolute top-0 right-0 -z-10 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px]" />
-            <div className="absolute bottom-0 left-0 -z-10 w-[200px] h-[200px] bg-primary/10 rounded-full blur-[80px]" />
+/* ── Hero ── */
+const Hero = () => {
+    const typed = useTypewriter(["Intelligence", "Innovation", "Impact"]);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+    const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
+    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+    return (
+        <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+            {/* Spotlight */}
+            <div className="spotlight top-[-20%] left-1/2 -translate-x-1/2" />
+
+            <motion.div style={{ y, opacity }} className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-32 pb-20">
+                {/* Badge */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Link to="/events" className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-secondary/50 px-3.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors mb-8 group">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Eco-ML Hackathon is live
+                        <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                </motion.div>
+
+                {/* Title */}
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.6 }}
+                    className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
+                >
+                    Machine{" "}
+                    <span className="text-primary">{typed}</span>
+                    <span className="text-primary animate-pulse">|</span>
+                    <br />Club
+                </motion.h1>
+
+                {/* Subtitle */}
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35, duration: 0.6 }}
+                    className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed"
+                >
+                    Where biology meets computation. We build adaptive systems,
+                    run research-driven hackathons, and push the boundaries of AI.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.6 }}
+                    className="flex flex-wrap justify-center gap-3"
+                >
+                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-xl h-11 px-6 text-sm font-medium shadow-lg shadow-primary/20">
+                        Explore Events <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                    <Button size="lg" variant="outline" className="rounded-xl h-11 px-6 text-sm font-medium border-border/60 text-muted-foreground hover:text-foreground">
+                        Join the Club
+                    </Button>
+                </motion.div>
+
+                {/* Stats */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    className="flex justify-center gap-12 mt-16 text-center"
+                >
+                    {[
+                        { value: "500+", label: "Members" },
+                        { value: "30+", label: "Projects" },
+                        { value: "2024", label: "Founded" },
+                    ].map((s, i) => (
+                        <div key={i}>
+                            <div className="text-2xl font-bold tracking-tight">{s.value}</div>
+                            <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+                        </div>
+                    ))}
+                </motion.div>
+            </motion.div>
+
+            <Marquee />
+            <AgentModel />
         </section>
     );
 };

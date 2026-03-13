@@ -1,184 +1,120 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Sun, Moon, Menu, X } from "lucide-react";
-import { useTheme } from "./theme-provider";
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-    SheetClose,
-} from "@/components/ui/sheet";
+import { Menu, X, ArrowUpRight } from "lucide-react";
+
+const links = [
+    { label: "Home", path: "/" },
+    { label: "Board", path: "/board" },
+    { label: "Advisory", path: "/advisory" },
+    { label: "Events", path: "/events" },
+    { label: "Ideas", path: "/ideas" },
+    { label: "Archive", path: "/completed-events" },
+];
 
 const Navbar = () => {
     const location = useLocation();
-    const [isOpen, setIsOpen] = useState(false);
-
-    const navItems = [
-        { label: "Home", path: "/" },
-        { label: "Board Members", path: "/board" },
-        { label: "Advisory", path: "/advisory" },
-        { label: "Events", path: "/events" },
-        { label: "Archive", path: "/completed-events" },
-    ];
-
-    const { theme, setTheme } = useTheme();
+    const [open, setOpen] = useState(false);
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-primary/20 bg-background/90 backdrop-blur-md">
-            <div className="w-full flex h-16 items-center justify-between pr-4 sm:pr-8 lg:pr-12">
-                <Link to="/" className="flex items-center group shrink-0">
-                    <img
-                        src="/images/logo.png"
-                        alt="MIC Logo"
-                        className="h-32 w-auto transition-all group-hover:scale-105 dark:invert object-contain"
-                    />
-                </Link>
+        <header className="fixed top-0 left-0 right-0 z-50">
+            <div className="mx-auto max-w-7xl px-4 pt-4 lg:px-8">
+                <nav className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/70 backdrop-blur-xl px-4 h-14 shadow-xl shadow-black/10">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-2.5 shrink-0">
+                        <img src="/images/logo.png" alt="MIC" className="h-[300px] w-[120px] object-contain mt-2.5" />
+                    </Link>
 
-                {/* Desktop Navigation */}
-                <nav className="hidden lg:flex items-center gap-1">
-                    <NavigationMenu>
-                        <NavigationMenuList className="gap-1">
-                            {navItems.map((item) => (
-                                <NavigationMenuItem key={item.path}>
-                                    <Link
-                                        to={item.path}
-                                        className={cn(
-                                            navigationMenuTriggerStyle(),
-                                            "relative px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all rounded-md group",
-                                            location.pathname === item.path
-                                                ? "text-primary-foreground"
-                                                : "text-primary/80 hover:text-primary"
-                                        )}
-                                    >
-                                        <span className="relative z-10">{item.label}</span>
-                                        {location.pathname === item.path && (
-                                            <motion.div
-                                                layoutId="navbar-active"
-                                                className="absolute inset-0 bg-primary rounded-md"
-                                                transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
-                                            />
-                                        )}
-                                        {location.pathname !== item.path && (
-                                            <div className="absolute inset-0 bg-primary/10 rounded-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        )}
-                                    </Link>
-                                </NavigationMenuItem>
-                            ))}
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                </nav>
-
-                {/* Desktop Buttons & Mobile Toggle */}
-                <div className="flex items-center gap-3">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        className="rounded-md text-primary hover:bg-primary/10"
-                    >
-                        {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                        <span className="sr-only">Toggle theme</span>
-                    </Button>
-                    <div className="hidden sm:flex items-center gap-3">
-                        <Button variant="ghost" className="rounded-md font-bold px-4 uppercase tracking-wider text-xs text-primary hover:bg-primary/10">
-                            Join Us
-                        </Button>
-                        <Button className="rounded-md font-bold px-5 uppercase tracking-wider text-xs bg-primary text-primary-foreground hover:opacity-90 transition-all">
-                            Contact
-                        </Button>
+                    {/* Center links */}
+                    <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+                        {links.map((l) => (
+                            <Link
+                                key={l.path}
+                                to={l.path}
+                                className={cn(
+                                    "relative px-3 py-1.5 text-[13px] font-medium rounded-lg transition-colors",
+                                    location.pathname === l.path
+                                        ? "text-foreground"
+                                        : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                {location.pathname === l.path && (
+                                    <motion.span
+                                        layoutId="bubble"
+                                        className="absolute inset-0 bg-secondary rounded-lg"
+                                        transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
+                                        style={{ zIndex: -1 }}
+                                    />
+                                )}
+                                {l.label}
+                            </Link>
+                        ))}
                     </div>
 
-                    {/* Mobile Navigation Toggle */}
-                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger
-                            render={
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    className="lg:hidden rounded-md border-primary/30 h-10 w-10 flex items-center justify-center text-primary"
-                                >
-                                    <Menu className="h-5 w-5" />
-                                    <span className="sr-only">Toggle menu</span>
-                                </Button>
-                            }
-                        />
-                        <SheetContent
-                            side="top"
-                            showCloseButton={false}
-                            className="w-full h-auto p-0 border-b border-primary/20 bg-background shadow-xl"
+                    {/* Right */}
+                    <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild className="hidden sm:flex text-xs text-muted-foreground hover:text-foreground hover:bg-secondary">
+                            <a href="https://discord.gg/your-invite-link" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+                                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" />
+                                </svg>
+                                Join Discord
+                            </a>
+                        </Button>
+                        <Button size="sm" className="hidden sm:flex text-xs bg-primary hover:bg-primary/90 text-white rounded-lg gap-1.5 h-8 px-4">
+                            Contact <ArrowUpRight className="w-3.5 h-3.5" />
+                        </Button>
+                        <button
+                            onClick={() => setOpen(!open)}
+                            className="md:hidden p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"
                         >
-                            <div className="p-4 border-b border-primary/10 flex items-center justify-between">
-                                <SheetTitle className="text-sm font-black uppercase tracking-widest text-primary">MIC Navigation</SheetTitle>
-                                <SheetClose className="rounded-md p-1 hover:bg-primary/10 transition-colors">
-                                    <X className="h-5 w-5 text-primary" />
-                                </SheetClose>
-                            </div>
-                            <motion.div
-                                initial="closed"
-                                animate="open"
-                                variants={{
-                                    open: {
-                                        transition: { staggerChildren: 0.05, delayChildren: 0.1 }
-                                    },
-                                    closed: {
-                                        transition: { staggerChildren: 0.05, staggerDirection: -1 }
-                                    }
-                                }}
-                            >
-                                <nav className="flex flex-col p-4 gap-1">
-                                    {navItems.map((item) => (
-                                        <motion.div
-                                            key={item.path}
-                                            variants={{
-                                                open: { opacity: 1, x: 0 },
-                                                closed: { opacity: 0, x: -20 }
-                                            }}
-                                        >
-                                            <Link
-                                                to={item.path}
-                                                onClick={() => setIsOpen(false)}
-                                                className={cn(
-                                                    "text-sm font-bold uppercase tracking-widest p-3 rounded-md transition-all block",
-                                                    location.pathname === item.path
-                                                        ? "bg-primary text-primary-foreground"
-                                                        : "text-primary/70 hover:bg-primary/5"
-                                                )}
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        </motion.div>
-                                    ))}
-                                </nav>
-                                <motion.div
-                                    variants={{
-                                        open: { opacity: 1, y: 0 },
-                                        closed: { opacity: 0, y: 10 }
-                                    }}
-                                    className="p-4 grid grid-cols-2 gap-3 pb-8"
-                                >
-                                    <Button variant="outline" className="w-full rounded-md border-primary/30 text-primary font-bold uppercase tracking-widest h-11 text-xs">
-                                        Join Us
-                                    </Button>
-                                    <Button className="w-full rounded-md bg-primary text-primary-foreground font-bold uppercase tracking-widest h-11 text-xs">
-                                        Contact
-                                    </Button>
-                                </motion.div>
-                            </motion.div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
+                            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                        </button>
+                    </div>
+                </nav>
             </div>
+
+            {/* Mobile */}
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden mx-4 mt-2 rounded-2xl border border-border/50 bg-background/95 backdrop-blur-xl p-2 shadow-xl shadow-black/10"
+                    >
+                        {links.map((l) => (
+                            <Link
+                                key={l.path}
+                                to={l.path}
+                                onClick={() => setOpen(false)}
+                                className={cn(
+                                    "block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                                    location.pathname === l.path
+                                        ? "bg-secondary text-foreground"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                                )}
+                            >
+                                {l.label}
+                            </Link>
+                        ))}
+                        <div className="flex gap-2 mt-2 pt-2 border-t border-border/50">
+                            <Button variant="outline" size="sm" asChild className="flex-1 text-xs rounded-lg h-9">
+                                <a href="https://discord.gg/your-invite-link" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1.5">
+                                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" />
+                                    </svg>
+                                    Join Discord
+                                </a>
+                            </Button>
+                            <Button size="sm" className="flex-1 text-xs bg-primary text-white rounded-lg h-9">Contact</Button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </header>
     );
 };
