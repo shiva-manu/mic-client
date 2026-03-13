@@ -6,7 +6,7 @@ import * as THREE from 'three';
 const ParticleSystem = () => {
     const groupRef = useRef<THREE.Group>(null);
 
-    useFrame((state, delta) => {
+    useFrame((_, delta) => {
         if (groupRef.current) {
             groupRef.current.rotation.x -= delta * 0.02;
             groupRef.current.rotation.y -= delta * 0.03;
