@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://mic-server-60hf.onrender.com/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export const api = {
     // Auth
