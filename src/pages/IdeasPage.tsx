@@ -122,6 +122,9 @@ const IdeasPage = () => {
     const [editingGithubId, setEditingGithubId] = useState<string | null>(null);
     const [editingGithubUrl, setEditingGithubUrl] = useState('');
 
+    // Description expanding
+    const [expandedIdeas, setExpandedIdeas] = useState<Set<string>>(new Set());
+
     // Auth state
     const [showAuth, setShowAuth] = useState(false);
     const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -781,9 +784,29 @@ const IdeasPage = () => {
                                                         {idea.title}
                                                     </h3>
                                                     {idea.description && (
-                                                        <p className="text-sm text-muted-foreground leading-relaxed mb-3 line-clamp-3">
-                                                            {idea.description}
-                                                        </p>
+                                                        <div className="mb-3">
+                                                            <p className={cn(
+                                                                "text-sm text-muted-foreground leading-relaxed",
+                                                                !expandedIdeas.has(idea.id) && "line-clamp-3"
+                                                            )}>
+                                                                {idea.description}
+                                                            </p>
+                                                            {idea.description.length > 200 && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setExpandedIdeas(prev => {
+                                                                            const next = new Set(prev);
+                                                                            if (next.has(idea.id)) next.delete(idea.id);
+                                                                            else next.add(idea.id);
+                                                                            return next;
+                                                                        });
+                                                                    }}
+                                                                    className="text-xs text-primary font-medium hover:underline mt-1"
+                                                                >
+                                                                    {expandedIdeas.has(idea.id) ? 'Show less' : 'Read more'}
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     )}
 
                                                     {/* GitHub Link Entry/Display */}
