@@ -780,14 +780,14 @@ const IdeasPage = () => {
 
                                                 {/* Content */}
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="font-semibold text-[15px] text-foreground group-hover:text-primary transition-colors mb-1.5">
+                                                    <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors mb-2">
                                                         {idea.title}
                                                     </h3>
                                                     {idea.description && (
-                                                        <div className="mb-3">
+                                                        <div className="mb-4">
                                                             <p className={cn(
-                                                                "text-sm text-muted-foreground leading-relaxed",
-                                                                !expandedIdeas.has(idea.id) && "line-clamp-3"
+                                                                "text-base text-muted-foreground leading-relaxed",
+                                                                !expandedIdeas.has(idea.id) && "line-clamp-4"
                                                             )}>
                                                                 {idea.description}
                                                             </p>
@@ -801,7 +801,7 @@ const IdeasPage = () => {
                                                                             return next;
                                                                         });
                                                                     }}
-                                                                    className="text-xs text-primary font-medium hover:underline mt-1"
+                                                                    className="text-sm text-primary font-semibold hover:underline mt-2"
                                                                 >
                                                                     {expandedIdeas.has(idea.id) ? 'Show less' : 'Read more'}
                                                                 </button>
