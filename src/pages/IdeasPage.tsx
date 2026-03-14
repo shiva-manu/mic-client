@@ -109,6 +109,10 @@ const IdeasPage = () => {
     const [respondingToId, setRespondingToId] = useState<string | null>(null);
     const [boardResponseText, setBoardResponseText] = useState('');
 
+    // Idea editing
+    const [editingGithubId, setEditingGithubId] = useState<string | null>(null);
+    const [editingGithubUrl, setEditingGithubUrl] = useState('');
+
     // Auth state
     const [showAuth, setShowAuth] = useState(false);
     const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -399,6 +403,25 @@ const IdeasPage = () => {
         } catch (err) {
             console.error('Error adding board response:', err);
             alert('Failed to add response.');
+        }
+    };
+
+    // ─── Update Github Link ─────────────────────────────────────
+    const handleUpdateGithub = async (ideaId: string) => {
+        try {
+            const { error } = await supabase
+                .from('ideas')
+                .update({ github_link: editingGithubUrl.trim() || null })
+                .eq('id', ideaId);
+
+            if (error) throw error;
+
+            setEditingGithubId(null);
+            setEditingGithubUrl('');
+            await fetchIdeas();
+        } catch (err) {
+            console.error('Error updating github link:', err);
+            alert('Failed to update repository link.');
         }
     };
 
@@ -754,17 +777,40 @@ const IdeasPage = () => {
                                                         </p>
                                                     )}
 
-                                                    {/* GitHub Link */}
-                                                    {idea.github_link && (
-                                                        <a
-                                                            href={idea.github_link}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-primary hover:bg-white/10 transition-colors mb-4"
-                                                        >
-                                                            <Github className="w-3.5 h-3.5" />
-                                                            Project Repository
-                                                        </a>
+                                                    {/* GitHub Link Entry/Display */}
+                                                    {editingGithubId === idea.id ? (
+                                                        <div className="flex items-center gap-2 max-w-sm mb-4">
+                                                            <div className="relative flex-1">
+                                                                <Github className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                                                                <Input
+                                                                    value={editingGithubUrl}
+                                                                    onChange={e => setEditingGithubUrl(e.target.value)}
+                                                                    placeholder="Repository URL"
+                                                                    className="bg-white/5 border-white/10 h-8 pl-9 text-xs rounded-lg"
+                                                                />
+                                                            </div>
+                                                            <Button size="sm" onClick={() => handleUpdateGithub(idea.id)} className="h-8 text-[11px] bg-primary text-white rounded-lg px-3">Save</Button>
+                                                            <Button size="sm" variant="ghost" onClick={() => { setEditingGithubId(null); setEditingGithubUrl(''); }} className="h-8 text-[11px] px-2 rounded-lg">Cancel</Button>
+                                                        </div>
+                                                    ) : (
+                                                        idea.github_link ? (
+                                                            <div className="flex items-center gap-2 mb-4">
+                                                                <a href={idea.github_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-primary hover:bg-white/10 transition-colors font-medium">
+                                                                    <Github className="w-3.5 h-3.5" />
+                                                                    Project Repository
+                                                                </a>
+                                                                {user?.id === idea.author_id && (
+                                                                    <button onClick={() => { setEditingGithubId(idea.id); setEditingGithubUrl(idea.github_link || ''); }} className="text-[10px] text-muted-foreground hover:text-white transition-colors uppercase tracking-wider font-bold px-2">Edit</button>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            user?.id === idea.author_id && (
+                                                                <button onClick={() => { setEditingGithubId(idea.id); setEditingGithubUrl(''); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-dashed border-white/20 text-[11px] font-medium text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors mb-4">
+                                                                    <Github className="w-3.5 h-3.5" />
+                                                                    Add Repository Link
+                                                                </button>
+                                                            )
+                                                        )
                                                     )}
 
                                                     {/* Board Response Display */}
