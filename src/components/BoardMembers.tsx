@@ -102,24 +102,24 @@ const BoardMembers = () => {
                             </div>
 
                             {/* Content Area */}
-                            <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-1 sm:px-3 mt-4 relative z-10 gap-2 sm:gap-3">
-                                <div className="flex flex-col gap-1 min-w-0 flex-1">
-                                    <h3 className="font-bold text-[13px] sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-primary transition-colors duration-300">
+                            <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:px-4 mt-5 relative z-10 gap-3">
+                                <div className="flex flex-col gap-1.5 min-w-0 flex-1 text-center sm:text-left">
+                                    <h3 className="font-bold text-[14px] sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-primary transition-colors duration-300 leading-snug">
                                         {m.name}
                                     </h3>
-                                    <p className="text-[10px] sm:text-[11px] font-bold text-primary/80 uppercase tracking-widest opacity-90 leading-tight">
+                                    <p className="text-[10px] sm:text-[11px] font-bold text-primary uppercase tracking-[0.15em] opacity-100 leading-none">
                                         {m.role}
                                     </p>
                                 </div>
 
                                 {/* Social Connections */}
-                                <div className="flex items-center gap-1.5 sm:gap-2.5">
+                                <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-2.5">
                                     {m.github && (
                                         <a
                                             href={m.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
+                                            className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
                                             title={`${m.name} on GitHub`}
                                         >
                                             <Github className="w-3.5 h-3.5 sm:w-4 h-4" />
@@ -130,7 +130,7 @@ const BoardMembers = () => {
                                             href={m.linkedin}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
+                                            className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
                                             title={`${m.name} on LinkedIn`}
                                         >
                                             <Linkedin className="w-3.5 h-3.5 sm:w-4 h-4" />
@@ -141,7 +141,7 @@ const BoardMembers = () => {
                                             href={m.discord}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
+                                            className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
                                             title={`${m.name} on Discord`}
                                         >
                                             <DiscordIcon className="w-3.5 h-3.5 sm:w-4 h-4" />
