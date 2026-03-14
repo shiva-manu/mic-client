@@ -49,7 +49,11 @@ const bento = [
 
 const Home = () => {
     return (
-        <div className="bg-transparent text-white">
+        <div className="relative min-h-screen overflow-hidden bg-transparent text-white">
+            {/* Background Grid & Glow */}
+            <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+            <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 opacity-40 blur-[100px] rounded-full z-0 pointer-events-none"></div>
+
             <Hero />
 
             {/* Features */}
