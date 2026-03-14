@@ -85,7 +85,7 @@ const BoardMembers = () => {
                             key={m.id || i}
                             custom={i}
                             variants={fadeUp}
-                            className="group w-full max-w-[400px] aspect-square relative rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/10 bg-black p-3 sm:p-6 flex flex-col items-center justify-between transition-all duration-500 hover:border-primary/40 shadow-2xl shadow-black/10 hover:shadow-primary/10"
+                            className="group w-full max-w-[400px] relative rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/10 bg-black p-3 sm:p-6 flex flex-col items-center transition-all duration-500 hover:border-primary/40 shadow-2xl shadow-black/10 hover:shadow-primary/10"
                         >
                             {/* Interactive Background Glow */}
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -102,27 +102,27 @@ const BoardMembers = () => {
                             </div>
 
                             {/* Content Area */}
-                            <div className="w-full flex items-center justify-between px-3 mt-4 relative z-10">
+                            <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-1 sm:px-3 mt-4 relative z-10 gap-3">
                                 <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                                    <h3 className="font-bold text-xs sm:text-xl tracking-tight text-foreground/90 group-hover:text-primary transition-colors duration-300 truncate">
+                                    <h3 className="font-bold text-sm sm:text-lg lg:text-xl tracking-tight text-foreground/90 group-hover:text-primary transition-colors duration-300 truncate">
                                         {m.name}
                                     </h3>
-                                    <p className="text-[8px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
+                                    <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
                                         {m.role}
                                     </p>
                                 </div>
 
                                 {/* Social Connections */}
-                                <div className="flex items-center gap-2.5">
+                                <div className="flex items-center gap-1.5 sm:gap-2.5">
                                     {m.github && (
                                         <a
                                             href={m.github}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-2.5 rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
+                                            className="p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
                                             title={`${m.name} on GitHub`}
                                         >
-                                            <Github className="w-4 h-4" />
+                                            <Github className="w-3.5 h-3.5 sm:w-4 h-4" />
                                         </a>
                                     )}
                                     {m.linkedin && (
@@ -130,10 +130,10 @@ const BoardMembers = () => {
                                             href={m.linkedin}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-2.5 rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
+                                            className="p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
                                             title={`${m.name} on LinkedIn`}
                                         >
-                                            <Linkedin className="w-4 h-4" />
+                                            <Linkedin className="w-3.5 h-3.5 sm:w-4 h-4" />
                                         </a>
                                     )}
                                     {m.discord && (
@@ -141,10 +141,10 @@ const BoardMembers = () => {
                                             href={m.discord}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-2.5 rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
+                                            className="p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-secondary/80 text-muted-foreground hover:bg-primary hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-lg border border-border/50"
                                             title={`${m.name} on Discord`}
                                         >
-                                            <DiscordIcon className="w-4 h-4" />
+                                            <DiscordIcon className="w-3.5 h-3.5 sm:w-4 h-4" />
                                         </a>
                                     )}
                                 </div>

@@ -155,4 +155,15 @@ export const api = {
         if (!res.ok) throw new Error('Failed to delete event');
         return res.json();
     },
+
+    // AI
+    chatAI: async (messages: any[]) => {
+        const res = await fetch(`${API_BASE_URL}/ai/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages }),
+        });
+        if (!res.ok) throw new Error('AI Chat failed');
+        return res.json();
+    },
 };
