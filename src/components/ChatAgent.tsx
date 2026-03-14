@@ -129,62 +129,78 @@ export default function ChatAgent() {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(true)}
                 className={cn(
-                    "fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center z-50",
+                    "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-14 h-14 rounded-full bg-primary text-white shadow-[0_0_20px_rgba(var(--primary),0.3)] flex items-center justify-center z-[100]",
                     isOpen && "hidden"
                 )}
             >
-                <MessageSquare className="w-6 h-6" />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+                <div className="relative">
+                    <MessageSquare className="w-6 h-6" />
+                    <div className="absolute -top-3 -right-3 w-4 h-4 bg-red-500 rounded-full border-2 border-black animate-pulse shadow-lg" />
+                </div>
             </motion.button>
 
             {/* Chat Window */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 100, scale: 0.9, transformOrigin: 'bottom right' }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[550px] bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden"
+                        exit={{ opacity: 0, y: 100, scale: 0.9 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        className={cn(
+                            "fixed z-[100] flex flex-col overflow-hidden",
+                            "bottom-4 right-4 left-4 sm:left-auto sm:right-6 sm:bottom-6",
+                            "w-auto sm:w-[400px] h-[500px] sm:h-[600px] max-h-[85vh] sm:max-h-[700px]",
+                            "bg-black/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                        )}
                     >
                         {/* Header */}
-                        <div className="p-4 border-b border-white/10 flex items-center justify-between bg-primary/10">
+                        <div className="p-4 sm:p-5 border-b border-white/5 flex items-center justify-between bg-white/[0.03]">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                                    <Bot className="w-5 h-5 text-primary" />
+                                <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                                    <Bot className="w-6 h-6 text-primary" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-sm">MIC AI Assistant</h3>
-                                    <div className="flex items-center gap-1">
-                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                                        <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Online</span>
+                                    <h3 className="font-bold text-sm sm:text-base text-white tracking-tight">MIC Intelligence</h3>
+                                    <div className="flex items-center gap-1.5">
+                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                        <span className="text-[10px] text-emerald-500/80 uppercase font-black tracking-widest">Active System</span>
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="hover:bg-white/5 rounded-xl">
-                                <X className="w-4 h-4" />
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setIsOpen(false)}
+                                className="hover:bg-white/10 rounded-2xl w-10 h-10 text-white/50 hover:text-white transition-colors"
+                            >
+                                <X className="w-5 h-5" />
                             </Button>
                         </div>
 
                         {/* Messages */}
-                        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-[#050505]">
+                        <div
+                            ref={scrollRef}
+                            className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent bg-gradient-to-b from-transparent to-primary/[0.02]"
+                        >
                             {messages.map((m, i) => (
                                 <div
                                     key={i}
                                     className={cn(
-                                        "flex flex-col max-w-[85%] space-y-1",
+                                        "flex flex-col max-w-[90%] sm:max-w-[85%] space-y-2",
                                         m.role === 'user' ? "ml-auto items-end" : "mr-auto items-start"
                                     )}
                                 >
                                     <div
                                         className={cn(
-                                            "p-3 rounded-2xl text-sm leading-relaxed overflow-x-auto",
+                                            "px-4 py-3 rounded-[1.25rem] text-sm sm:text-[15px] leading-relaxed",
                                             m.role === 'user'
-                                                ? "bg-primary text-white rounded-tr-none shadow-lg shadow-primary/10"
-                                                : "bg-[#1a1a1a] text-foreground/90 rounded-tl-none border border-white/5 shadow-inner"
+                                                ? "bg-primary text-white rounded-tr-none shadow-xl shadow-primary/20 font-medium"
+                                                : "bg-white/[0.05] text-white/90 rounded-tl-none border border-white/5 backdrop-blur-sm"
                                         )}
                                     >
                                         {m.role === 'assistant' ? (
-                                            <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10">
+                                            <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-code:text-primary-foreground prose-a:text-primary">
                                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                     {m.content}
                                                 </ReactMarkdown>
@@ -193,40 +209,45 @@ export default function ChatAgent() {
                                             m.content
                                         )}
                                     </div>
-                                    <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter opacity-50">
-                                        {m.role === 'user' ? 'You' : 'Assistant'}
-                                    </span>
+                                    <div className="flex items-center gap-2 px-1">
+                                        <span className="text-[9px] text-white/30 uppercase font-bold tracking-widest">
+                                            {m.role === 'user' ? 'Inquiry' : 'Response'}
+                                        </span>
+                                    </div>
                                 </div>
                             ))}
                             {loading && messages[messages.length - 1].content === '' && (
                                 <div className="flex items-start mr-auto">
-                                    <div className="bg-[#1a1a1a] p-3 rounded-2xl rounded-tl-none border border-white/5">
-                                        <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                                    <div className="bg-white/[0.05] p-4 rounded-2xl rounded-tl-none border border-white/5">
+                                        <Loader2 className="w-5 h-5 animate-spin text-primary" />
                                     </div>
                                 </div>
                             )}
                         </div>
 
                         {/* Input */}
-                        <div className="p-4 border-t border-white/10 bg-black">
+                        <div className="p-4 sm:p-6 bg-black border-t border-white/5">
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-                                className="flex gap-2"
+                                className="flex gap-3 relative group"
                             >
                                 <Input
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Ask MIC AI..."
-                                    className="bg-white/5 border-white/10 rounded-xl h-10 text-xs focus:ring-primary/50"
+                                    placeholder="Message MIC AI..."
+                                    className="bg-white/[0.03] border-white/10 rounded-2xl h-12 sm:h-14 text-sm sm:text-base focus:ring-primary/40 focus:border-primary/40 focus:bg-white/[0.05] transition-all px-5 pr-14"
                                 />
                                 <Button
                                     type="submit"
                                     disabled={loading || !input.trim()}
-                                    className="h-10 w-10 p-0 rounded-xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+                                    className="absolute right-1.5 top-1.5 sm:top-2 sm:right-2 h-9 w-9 sm:h-10 sm:w-10 p-0 rounded-xl bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 flex items-center justify-center transition-transform active:scale-95"
                                 >
-                                    <Send className="w-4 h-4" />
+                                    <Send className="w-4 h-4 sm:w-5 h-5" />
                                 </Button>
                             </form>
+                            <p className="text-[10px] text-center text-white/20 mt-3 uppercase tracking-tighter font-bold">
+                                Experimental Neural-Link Interface
+                            </p>
                         </div>
                     </motion.div>
                 )}
