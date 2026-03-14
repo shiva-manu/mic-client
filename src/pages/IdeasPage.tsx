@@ -791,7 +791,7 @@ const IdeasPage = () => {
                                                             )}>
                                                                 {idea.description}
                                                             </p>
-                                                            {idea.description.length > 200 && (
+                                                            {idea.description.length > 100 && (
                                                                 <button
                                                                     onClick={() => {
                                                                         setExpandedIdeas(prev => {
