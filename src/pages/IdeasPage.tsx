@@ -64,6 +64,15 @@ const timeAgo = (date: string) => {
     return new Date(date).toLocaleDateString();
 };
 
+const formatUrl = (url: string) => {
+    if (!url) return null;
+    let formattedUrl = url.trim();
+    if (formattedUrl && !/^https?:\/\//i.test(formattedUrl)) {
+        formattedUrl = `https://${formattedUrl}`;
+    }
+    return formattedUrl;
+};
+
 // ─── Skeleton Loader ─────────────────────────────────────────────
 const IdeaSkeleton = () => (
     <Card className="bg-white/[0.02] border-white/10">
@@ -259,7 +268,7 @@ const IdeasPage = () => {
                 upvotes: 0,
                 downvotes: 0,
                 tags,
-                github_link: githubInput.trim() || null,
+                github_link: formatUrl(githubInput),
             });
 
             if (error) throw error;
@@ -411,7 +420,7 @@ const IdeasPage = () => {
         try {
             const { error } = await supabase
                 .from('ideas')
-                .update({ github_link: editingGithubUrl.trim() || null })
+                .update({ github_link: formatUrl(editingGithubUrl) })
                 .eq('id', ideaId);
 
             if (error) throw error;
