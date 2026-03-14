@@ -102,12 +102,12 @@ const BoardMembers = () => {
                             </div>
 
                             {/* Content Area */}
-                            <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-1 sm:px-3 mt-4 relative z-10 gap-3">
-                                <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                                    <h3 className="font-bold text-sm sm:text-lg lg:text-xl tracking-tight text-foreground/90 group-hover:text-primary transition-colors duration-300 truncate">
+                            <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-1 sm:px-3 mt-4 relative z-10 gap-2 sm:gap-3">
+                                <div className="flex flex-col gap-1 min-w-0 flex-1">
+                                    <h3 className="font-bold text-[13px] sm:text-lg lg:text-xl tracking-tight text-white group-hover:text-primary transition-colors duration-300">
                                         {m.name}
                                     </h3>
-                                    <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
+                                    <p className="text-[10px] sm:text-[11px] font-bold text-primary/80 uppercase tracking-widest opacity-90 leading-tight">
                                         {m.role}
                                     </p>
                                 </div>
