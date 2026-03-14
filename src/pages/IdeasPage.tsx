@@ -21,8 +21,12 @@ import {
     User as UserIcon,
     AlertCircle,
     CheckCircle2,
+    Github,
+    MessageSquare,
+    ShieldCheck,
 } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
+import { api } from '@/lib/api';
 
 // ─── Types ───────────────────────────────────────────────────────
 interface Idea {
@@ -36,6 +40,8 @@ interface Idea {
     upvotes: number;
     downvotes: number;
     tags: string[];
+    github_link?: string;
+    board_response?: string;
 }
 
 interface Vote {
@@ -96,6 +102,12 @@ const IdeasPage = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [tagsInput, setTagsInput] = useState('');
+    const [githubInput, setGithubInput] = useState('');
+
+    // Board Member detection
+    const [isBoardMember, setIsBoardMember] = useState(false);
+    const [respondingToId, setRespondingToId] = useState<string | null>(null);
+    const [boardResponseText, setBoardResponseText] = useState('');
 
     // Auth state
     const [showAuth, setShowAuth] = useState(false);
@@ -156,6 +168,28 @@ const IdeasPage = () => {
 
     useEffect(() => { fetchIdeas(); }, [fetchIdeas]);
     useEffect(() => { fetchUserVotes(); }, [fetchUserVotes]);
+
+    // Check if user is board member
+    useEffect(() => {
+        const checkBoardStatus = async () => {
+            if (!user) {
+                setIsBoardMember(false);
+                return;
+            }
+            try {
+                const boardMembers = await api.getBoardMembers();
+                const userName = user.user_metadata?.full_name || user.user_metadata?.name || '';
+                const isMember = boardMembers.some((m: any) =>
+                    m.name.toLowerCase() === userName.toLowerCase() ||
+                    (m.github && user.user_metadata?.user_name === m.github)
+                );
+                setIsBoardMember(isMember);
+            } catch (err) {
+                console.error('Error checking board status:', err);
+            }
+        };
+        checkBoardStatus();
+    }, [user]);
 
     // ─── Auth Methods ────────────────────────────────────────────
     const handleAuth = async (e: React.FormEvent) => {
@@ -221,6 +255,7 @@ const IdeasPage = () => {
                 upvotes: 0,
                 downvotes: 0,
                 tags,
+                github_link: githubInput.trim() || null,
             });
 
             if (error) throw error;
@@ -228,6 +263,7 @@ const IdeasPage = () => {
             setTitle('');
             setDescription('');
             setTagsInput('');
+            setGithubInput('');
             setShowForm(false);
             await fetchIdeas();
         } catch (err) {
@@ -342,6 +378,27 @@ const IdeasPage = () => {
                 next.delete(ideaId);
                 return next;
             });
+        }
+    };
+
+    // ─── Board Response ──────────────────────────────
+    const handleBoardResponse = async (ideaId: string) => {
+        if (!isBoardMember || !boardResponseText.trim()) return;
+
+        try {
+            const { error } = await supabase
+                .from('ideas')
+                .update({ board_response: boardResponseText.trim() })
+                .eq('id', ideaId);
+
+            if (error) throw error;
+
+            setBoardResponseText('');
+            setRespondingToId(null);
+            await fetchIdeas();
+        } catch (err) {
+            console.error('Error adding board response:', err);
+            alert('Failed to add response.');
         }
     };
 
@@ -581,6 +638,17 @@ const IdeasPage = () => {
                                             placeholder="Tags: AI, Workshop, Project"
                                             className="bg-white/5 border-white/10 placeholder:text-muted-foreground/50 rounded-xl flex-1"
                                         />
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <div className="relative flex-1">
+                                            <Github className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                            <Input
+                                                value={githubInput}
+                                                onChange={e => setGithubInput(e.target.value)}
+                                                placeholder="GitHub Repository URL (optional)"
+                                                className="bg-white/5 border-white/10 placeholder:text-muted-foreground/50 rounded-xl pl-10"
+                                            />
+                                        </div>
                                         <Button
                                             type="submit"
                                             disabled={submitting || !title.trim()}
@@ -686,6 +754,35 @@ const IdeasPage = () => {
                                                         </p>
                                                     )}
 
+                                                    {/* GitHub Link */}
+                                                    {idea.github_link && (
+                                                        <a
+                                                            href={idea.github_link}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-primary hover:bg-white/10 transition-colors mb-4"
+                                                        >
+                                                            <Github className="w-3.5 h-3.5" />
+                                                            Project Repository
+                                                        </a>
+                                                    )}
+
+                                                    {/* Board Response Display */}
+                                                    {idea.board_response && (
+                                                        <div className="relative p-4 rounded-xl bg-primary/5 border border-primary/20 mb-4 overflow-hidden group/response">
+                                                            <div className="absolute top-0 right-0 p-2 opacity-10">
+                                                                <ShieldCheck className="w-12 h-12 text-primary" />
+                                                            </div>
+                                                            <div className="flex items-center gap-2 mb-1.5">
+                                                                <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+                                                                <span className="text-[10px] font-black uppercase tracking-widest text-primary">Official Response</span>
+                                                            </div>
+                                                            <p className="text-sm text-foreground/90 leading-relaxed italic">
+                                                                "{idea.board_response}"
+                                                            </p>
+                                                        </div>
+                                                    )}
+
                                                     {/* Tags */}
                                                     {idea.tags && idea.tags.length > 0 && (
                                                         <div className="flex flex-wrap gap-1.5 mb-3">
@@ -718,6 +815,51 @@ const IdeasPage = () => {
                                                             <ChevronDown className="w-3 h-3" />{idea.downvotes}
                                                         </span>
                                                     </div>
+
+                                                    {/* Board Responder Action */}
+                                                    {isBoardMember && (
+                                                        <div className="mt-4 pt-4 border-t border-white/5">
+                                                            {respondingToId === idea.id ? (
+                                                                <div className="space-y-3">
+                                                                    <Textarea
+                                                                        value={boardResponseText}
+                                                                        onChange={e => setBoardResponseText(e.target.value)}
+                                                                        placeholder="Add an official response..."
+                                                                        className="bg-white/5 border-white/10 text-sm rounded-xl resize-none"
+                                                                        rows={2}
+                                                                    />
+                                                                    <div className="flex gap-2">
+                                                                        <Button
+                                                                            size="sm"
+                                                                            onClick={() => handleBoardResponse(idea.id)}
+                                                                            className="h-8 text-[11px] bg-primary text-white"
+                                                                        >
+                                                                            Post Response
+                                                                        </Button>
+                                                                        <Button
+                                                                            size="sm"
+                                                                            variant="ghost"
+                                                                            onClick={() => { setRespondingToId(null); setBoardResponseText(''); }}
+                                                                            className="h-8 text-[11px]"
+                                                                        >
+                                                                            Cancel
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setRespondingToId(idea.id);
+                                                                        setBoardResponseText(idea.board_response || '');
+                                                                    }}
+                                                                    className="flex items-center gap-1.5 text-[11px] font-bold text-primary/70 hover:text-primary uppercase tracking-wider transition-colors"
+                                                                >
+                                                                    <MessageSquare className="w-3.5 h-3.5" />
+                                                                    {idea.board_response ? 'Clarify Response' : 'Official Response'}
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </CardContent>
