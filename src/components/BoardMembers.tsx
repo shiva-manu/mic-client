@@ -18,8 +18,8 @@ const fadeUp = {
 import { Skeleton } from "@/components/ui/skeleton";
 
 const BoardMemberSkeleton = () => (
-    <div className="group w-full max-w-[400px] h-[400px] relative rounded-[2.5rem] border border-white/5 bg-white/[0.02] p-6 flex flex-col items-center justify-between">
-        <Skeleton className="w-[280px] h-[280px] rounded-3xl bg-white/5" />
+    <div className="group w-full max-w-[400px] aspect-square relative rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/5 bg-white/[0.02] p-3 sm:p-6 flex flex-col items-center justify-between">
+        <Skeleton className="w-full aspect-square rounded-2xl sm:rounded-3xl bg-white/5" />
         <div className="w-full flex items-center justify-between px-3 mt-4">
             <div className="flex flex-col gap-2">
                 <Skeleton className="h-6 w-32 bg-white/5" />
@@ -54,7 +54,7 @@ const BoardMembers = () => {
     if (loading) {
         return (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                         <BoardMemberSkeleton key={i} />
                     ))}
@@ -78,20 +78,20 @@ const BoardMembers = () => {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center"
+                    className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10 justify-items-center"
                 >
                     {boardMembers.map((m, i) => (
                         <motion.div
                             key={m.id || i}
                             custom={i}
                             variants={fadeUp}
-                            className="group w-full max-w-[400px] h-[400px] relative rounded-[2.5rem] border border-white/10 bg-black p-6 flex flex-col items-center justify-between transition-all duration-500 hover:border-primary/40 shadow-2xl shadow-black/10 hover:shadow-primary/10"
+                            className="group w-full max-w-[400px] aspect-square relative rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/10 bg-black p-3 sm:p-6 flex flex-col items-center justify-between transition-all duration-500 hover:border-primary/40 shadow-2xl shadow-black/10 hover:shadow-primary/10"
                         >
                             {/* Interactive Background Glow */}
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-                            {/* Member Image Section: 280x280 */}
-                            <div className="w-[280px] h-[280px] rounded-3xl overflow-hidden relative z-10 border border-white/5 shadow-inner bg-muted/20">
+                            {/* Member Image Section: Responsive Square */}
+                            <div className="w-full aspect-square rounded-2xl sm:rounded-3xl overflow-hidden relative z-10 border border-white/5 shadow-inner bg-muted/20">
                                 <img
                                     src={m.image}
                                     alt={m.name}
@@ -103,11 +103,11 @@ const BoardMembers = () => {
 
                             {/* Content Area */}
                             <div className="w-full flex items-center justify-between px-3 mt-4 relative z-10">
-                                <div className="flex flex-col gap-0.5">
-                                    <h3 className="font-bold text-xl tracking-tight text-foreground/90 group-hover:text-primary transition-colors duration-300">
+                                <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                                    <h3 className="font-bold text-xs sm:text-xl tracking-tight text-foreground/90 group-hover:text-primary transition-colors duration-300 truncate">
                                         {m.name}
                                     </h3>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] opacity-70">
+                                    <p className="text-[8px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
                                         {m.role}
                                     </p>
                                 </div>

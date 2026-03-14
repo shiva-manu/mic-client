@@ -2,6 +2,7 @@ import Hero from '@/components/Hero';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Leaf, Brain, Network, Calendar, Users, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ChatAgent from '@/components/ChatAgent';
 
 import type { Easing } from "framer-motion";
 
@@ -123,6 +124,7 @@ const Home = () => {
                     </motion.div>
                 </div>
             </section>
+            <ChatAgent />
         </div>
     );
 };
