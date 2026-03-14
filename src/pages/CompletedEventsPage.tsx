@@ -1,13 +1,36 @@
 import { motion } from "framer-motion";
-import { MapPin, Calendar, Loader2 } from 'lucide-react';
+import { MapPin, Calendar } from 'lucide-react';
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import type { Easing } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" as Easing } })
 };
+
+const CompletedEventSkeleton = () => (
+    <div className="relative">
+        <div className="absolute -left-[41px] md:-left-[57px] top-6 w-5 h-5 rounded-full border-[3px] border-background flex items-center justify-center bg-white/5">
+            <div className="w-1 h-1 rounded-full bg-background/50" />
+        </div>
+        <div className="group rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
+            <div className="grid md:grid-cols-5 gap-0">
+                <Skeleton className="md:col-span-2 h-40 md:h-[200px] bg-white/5 rounded-none" />
+                <div className="md:col-span-3 p-6 flex flex-col justify-center space-y-3">
+                    <Skeleton className="h-4 w-20 rounded-full bg-white/5" />
+                    <Skeleton className="h-6 w-3/4 bg-white/5" />
+                    <Skeleton className="h-12 w-full bg-white/5" />
+                    <div className="flex gap-4">
+                        <Skeleton className="h-3 w-20 bg-white/5" />
+                        <Skeleton className="h-3 w-20 bg-white/5" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
 
 const CompletedEventsPage = () => {
     const [events, setEvents] = useState<any[]>([]);
@@ -45,8 +68,10 @@ const CompletedEventsPage = () => {
                 </motion.div>
 
                 {loading ? (
-                    <div className="flex justify-center items-center py-32">
-                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    <div className="relative border-l border-white/5 ml-4 md:ml-8 pl-8 md:pl-12 space-y-8">
+                        {[1, 2, 3].map((i) => (
+                            <CompletedEventSkeleton key={i} />
+                        ))}
                     </div>
                 ) : events.length === 0 ? (
                     <div className="py-20 text-center border border-dashed border-border/50 rounded-3xl bg-card/20">

@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { MapPin, Clock, Calendar, ArrowRight, Loader2 } from "lucide-react";
+import { MapPin, Clock, Calendar, ArrowRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import type { Easing } from "framer-motion";
@@ -10,6 +11,35 @@ const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" as Easing } })
 };
+
+const EventSkeleton = () => (
+    <div className="relative">
+        {/* Skeleton Timeline Dot */}
+        <div className="absolute -left-[45px] md:-left-[61px] top-8 w-6 h-6 rounded-full border-4 border-background flex items-center justify-center bg-white/5">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/5" />
+        </div>
+
+        <div className="group rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden p-0 h-[400px] md:h-auto">
+            <div className="grid md:grid-cols-5 gap-0 h-full">
+                <Skeleton className="md:col-span-2 h-48 md:h-[260px] bg-white/5 rounded-none" />
+                <div className="md:col-span-3 p-6 md:p-8 space-y-4">
+                    <div className="flex gap-2">
+                        <Skeleton className="h-5 w-20 rounded-full bg-white/5" />
+                        <Skeleton className="h-5 w-16 rounded-full bg-white/5" />
+                    </div>
+                    <Skeleton className="h-8 w-3/4 bg-white/5" />
+                    <Skeleton className="h-4 w-full bg-white/5" />
+                    <Skeleton className="h-4 w-5/6 bg-white/5" />
+                    <div className="flex gap-4 pt-2">
+                        <Skeleton className="h-3 w-24 bg-white/5" />
+                        <Skeleton className="h-3 w-24 bg-white/5" />
+                    </div>
+                    <Skeleton className="h-9 w-28 bg-white/5 mt-4" />
+                </div>
+            </div>
+        </div>
+    </div>
+);
 
 const Events = () => {
     const [events, setEvents] = useState<any[]>([]);
@@ -33,9 +63,15 @@ const Events = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center py-32">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
+            <section className="py-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="relative border-l border-white/5 ml-4 md:ml-8 pl-8 md:pl-12 space-y-12">
+                        {[1, 2].map((i) => (
+                            <EventSkeleton key={i} />
+                        ))}
+                    </div>
+                </div>
+            </section>
         );
     }
 
