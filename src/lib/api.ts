@@ -166,4 +166,33 @@ export const api = {
         if (!res.ok) throw new Error('AI Chat failed');
         return res.json();
     },
+
+    // Contact
+    getContacts: async (token: string) => {
+        const res = await fetch(`${API_BASE_URL}/contact`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to fetch contacts');
+        return res.json();
+    },
+    createContact: async (data: any) => {
+        const res = await fetch(`${API_BASE_URL}/contact`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || err.message || 'Failed to submit contact');
+        }
+        return res.json();
+    },
+    deleteContact: async (id: string, token: string) => {
+        const res = await fetch(`${API_BASE_URL}/contact/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to delete contact');
+        return res.json();
+    },
 };

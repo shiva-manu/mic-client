@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Send, Loader2, Cpu } from 'lucide-react';
+import { Terminal, Send, Loader2, Cpu, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { api } from '@/lib/api';
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const ContactPage = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
     // Typing effect detector
     useEffect(() => {
@@ -29,12 +31,19 @@ const ContactPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
-        // fake simulate api
-        await new Promise(r => setTimeout(r, 2000));
-        setSubmitting(false);
-        setSuccess(true);
-        setFormData({ name: '', rollnumber: '', phone: '', email: '' });
-        setTimeout(() => setSuccess(false), 5000);
+        setErrorMsg('');
+
+        try {
+            await api.createContact(formData);
+            setSuccess(true);
+            setFormData({ name: '', rollnumber: '', phone: '', email: '' });
+            setTimeout(() => setSuccess(false), 5000);
+        } catch (err: any) {
+            console.error(err);
+            setErrorMsg(err.message || "Failed to compile request");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -73,6 +82,10 @@ const ContactPage = () => {
                             ) : submitting ? (
                                 <span className="flex items-center gap-2 text-[#ce412b]">
                                     <Loader2 className="w-3.5 h-3.5 animate-spin" /> Executing memory safe push_
+                                </span>
+                            ) : errorMsg ? (
+                                <span className="flex items-center gap-2 text-red-500">
+                                    <AlertCircle className="w-3.5 h-3.5" /> panic!: {errorMsg}
                                 </span>
                             ) : success ? (
                                 <span className="text-green-500">Process exited with code 0 (Success)</span>

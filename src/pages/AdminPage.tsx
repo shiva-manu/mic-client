@@ -13,7 +13,8 @@ import {
     ShieldCheck,
     Github,
     Linkedin,
-    MessageSquare
+    MessageSquare,
+    Inbox
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +37,7 @@ const AdminPage = () => {
     const [boardMembers, setBoardMembers] = useState<any[]>([]);
     const [advisory, setAdvisory] = useState<any[]>([]);
     const [events, setEvents] = useState<any[]>([]);
+    const [contacts, setContacts] = useState<any[]>([]);
 
     const [boardForm, setBoardForm] = useState({ name: '', role: '', image: '', github: '', linkedin: '', discord: '' });
     const [advisoryForm, setAdvisoryForm] = useState({ name: '', role: '', image: '', github: '', linkedin: '', discord: '' });
@@ -57,14 +59,16 @@ const AdminPage = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [boardData, advisoryData, eventsData] = await Promise.all([
+            const [boardData, advisoryData, eventsData, contactsData] = await Promise.all([
                 api.getBoardMembers(),
                 api.getAdvisory(),
-                api.getEvents()
+                api.getEvents(),
+                api.getContacts(token || '')
             ]);
             setBoardMembers(Array.isArray(boardData) ? boardData : []);
             setAdvisory(Array.isArray(advisoryData) ? advisoryData : []);
             setEvents(Array.isArray(eventsData) ? eventsData : []);
+            setContacts(Array.isArray(contactsData) ? contactsData : []);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -164,7 +168,7 @@ const AdminPage = () => {
         }
     };
 
-    const handleDelete = async (type: 'board' | 'advisory' | 'event', id: string) => {
+    const handleDelete = async (type: 'board' | 'advisory' | 'event' | 'contact', id: string) => {
         if (!confirm('Are you sure you want to delete this?')) return;
         if (!token) return;
 
@@ -172,6 +176,7 @@ const AdminPage = () => {
             if (type === 'board') await api.deleteBoardMember(id, token);
             if (type === 'advisory') await api.deleteAdvisory(id, token);
             if (type === 'event') await api.deleteEvent(id, token);
+            if (type === 'contact') await api.deleteContact(id, token);
             fetchData();
         })();
 
@@ -219,7 +224,7 @@ const AdminPage = () => {
                 </div>
 
                 <Tabs defaultValue="board" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 bg-secondary/30 backdrop-blur-md border border-white/5 h-14 mb-8 p-1.5 rounded-xl">
+                    <TabsList className="grid w-full grid-cols-4 bg-secondary/30 backdrop-blur-md border border-white/5 h-14 mb-8 p-1.5 rounded-xl">
                         <TabsTrigger value="board" className="flex items-center gap-2 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 transition-all rounded-lg text-sm font-medium h-full">
                             <Users className="w-4 h-4" /> Board Members
                         </TabsTrigger>
@@ -228,6 +233,9 @@ const AdminPage = () => {
                         </TabsTrigger>
                         <TabsTrigger value="events" className="flex items-center gap-2 data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 transition-all rounded-lg text-sm font-medium h-full">
                             <Calendar className="w-4 h-4" /> Club Events
+                        </TabsTrigger>
+                        <TabsTrigger value="contacts" className="flex items-center gap-2 data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 transition-all rounded-lg text-sm font-medium h-full">
+                            <Inbox className="w-4 h-4" /> Contacts
                         </TabsTrigger>
                     </TabsList>
 
@@ -615,6 +623,54 @@ const AdminPage = () => {
                                             </motion.div>
                                         ))}
                                     </div>
+                                </div>
+                            </div>
+                        </TabsContent>
+
+                        {/* Contacts Tab Content */}
+                        <TabsContent value="contacts" className="space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
+                            <div className="flex flex-col gap-6">
+                                <div className="flex items-center justify-between px-2">
+                                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                                        <Inbox className="w-5 h-5 text-amber-400" />
+                                        Submissions <span className="text-muted-foreground font-normal">({contacts.length})</span>
+                                    </h3>
+                                </div>
+                                <div className="grid gap-4">
+                                    {contacts.map((contact) => (
+                                        <motion.div
+                                            key={contact.id}
+                                            initial={{ opacity: 0, scale: 0.98 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="group bg-white/[0.02] border gap-4 border-white/10 p-5 rounded-2xl flex flex-col md:flex-row justify-between md:items-center hover:bg-white/[0.04] hover:shadow-2xl transition-all"
+                                        >
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <h4 className="font-bold text-lg text-foreground">{contact.name}</h4>
+                                                    <span className="text-sm font-mono text-muted-foreground bg-white/5 px-2 py-0.5 rounded-md border border-white/10">{contact.rollnumber}</span>
+                                                </div>
+                                                <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm text-foreground/80 mt-1">
+                                                    <div className="flex items-center gap-1.5"><Inbox className="w-4 h-4 text-emerald-400" /> <a href={`mailto:${contact.email}`} className="hover:underline hover:text-white transition-all">{contact.email}</a></div>
+                                                    <div className="flex items-center gap-1.5"><MessageSquare className="w-4 h-4 text-amber-400" /> {contact.phone}</div>
+                                                    <div className="flex items-center gap-1.5 opacity-60"><Clock className="w-4 h-4" /> {new Date(contact.createdAt).toLocaleDateString()}</div>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-all active:scale-90 relative shrink-0"
+                                                onClick={() => handleDelete('contact', contact.id)}
+                                            >
+                                                <Trash2 className="w-5 h-5" />
+                                            </Button>
+                                        </motion.div>
+                                    ))}
+                                    {contacts.length === 0 && (
+                                        <Card className="bg-white/[0.02] border-white/10 backdrop-blur-2xl p-8 flex flex-col items-center justify-center text-center">
+                                            <Inbox className="w-12 h-12 text-muted-foreground/30 mb-4" />
+                                            <p className="text-muted-foreground">No contact submissions yet</p>
+                                        </Card>
+                                    )}
                                 </div>
                             </div>
                         </TabsContent>
