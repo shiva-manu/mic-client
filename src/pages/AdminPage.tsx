@@ -200,67 +200,67 @@ const AdminPage = () => {
                 {/* Management Header */}
                 <div className="relative group">
                     <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                    <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 bg-secondary/20 p-8 rounded-2xl border border-white/10 backdrop-blur-2xl shadow-2xl">
-                        <div className="flex flex-col gap-3">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                                    <ShieldCheck className="w-8 h-8 text-emerald-400" />
+                    <div className="relative flex flex-col gap-5 bg-secondary/20 p-5 sm:p-8 rounded-2xl border border-white/10 backdrop-blur-2xl shadow-2xl">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                            <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="p-2 sm:p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 shrink-0">
+                                    <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-400" />
                                 </div>
-                                <div className="flex flex-col">
+                                <div className="flex flex-col min-w-0">
                                     <motion.h1
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent"
+                                        className="text-2xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent"
                                     >
                                         Management Console
                                     </motion.h1>
                                     <div className="flex items-center gap-2 mt-1">
-                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                                        <p className="text-xs font-medium text-emerald-400/80 uppercase tracking-widest leading-none">System Authorized</p>
+                                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></div>
+                                        <p className="text-[10px] sm:text-xs font-medium text-emerald-400/80 uppercase tracking-widest leading-none">System Authorized</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 mt-2 pl-1">
-                                <Avatar className="h-6 w-6 border border-white/10">
-                                    <AvatarFallback className="bg-emerald-500/10 text-[10px] text-emerald-400 font-bold">{user?.email?.[0].toUpperCase()}</AvatarFallback>
-                                </Avatar>
-                                <p className="text-sm font-medium text-muted-foreground">Admin Session: <span className="text-foreground/90 font-mono text-xs">{user?.email}</span></p>
+                            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => window.location.href = '/'}
+                                    className="flex-1 sm:flex-none bg-white/5 border-white/10 hover:bg-white/10 transition-all px-4 sm:px-6 h-10 sm:h-12 rounded-xl text-xs sm:text-sm font-semibold"
+                                >
+                                    View Site
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={logout}
+                                    className="flex-1 sm:flex-none bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all px-4 sm:px-6 h-10 sm:h-12 rounded-xl text-xs sm:text-sm font-semibold shadow-lg shadow-red-500/5 active:scale-95"
+                                >
+                                    <LogOut className="w-4 h-4 mr-1.5 sm:mr-2" /> End Session
+                                </Button>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <Button
-                                variant="outline"
-                                onClick={() => window.location.href = '/'}
-                                className="bg-white/5 border-white/10 hover:bg-white/10 transition-all px-6 h-12 rounded-xl text-sm font-semibold"
-                            >
-                                View Site
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                onClick={logout}
-                                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all px-6 h-12 rounded-xl text-sm font-semibold shadow-lg shadow-red-500/5 active:scale-95"
-                            >
-                                <LogOut className="w-4 h-4 mr-2" /> End Session
-                            </Button>
+                        <div className="flex items-center gap-3 pl-1 border-t border-white/5 pt-4">
+                            <Avatar className="h-6 w-6 border border-white/10 shrink-0">
+                                <AvatarFallback className="bg-emerald-500/10 text-[10px] text-emerald-400 font-bold">{user?.email?.[0].toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Admin: <span className="text-foreground/90 font-mono text-[11px] sm:text-xs">{user?.email}</span></p>
                         </div>
                     </div>
                 </div>
 
-                <Tabs defaultValue="board" className="w-full space-y-10">
-                    <TabsList className="flex items-center justify-start gap-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 h-16 p-2 rounded-2xl overflow-x-auto no-scrollbar">
-                        <TabsTrigger value="board" className="flex items-center gap-2.5 px-6 py-2.5 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/20 data-[state=active]:shadow-[0_0_20px_rgba(16,185,129,0.1)] border border-transparent transition-all rounded-xl text-sm font-bold h-full whitespace-nowrap">
-                            <Users className="w-4 h-4" /> Board Members
+                <Tabs defaultValue="board" className="w-full space-y-6 sm:space-y-10">
+                    <TabsList className="flex items-center gap-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 h-auto sm:h-16 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        <TabsTrigger value="board" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/20 data-[state=active]:shadow-[0_0_20px_rgba(16,185,129,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
+                            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span className="hidden xs:inline">Board</span><span className="hidden sm:inline"> Members</span><span className="xs:hidden">Board</span>
                         </TabsTrigger>
-                        <TabsTrigger value="advisory" className="flex items-center gap-2.5 px-6 py-2.5 data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-500/20 data-[state=active]:shadow-[0_0_20px_rgba(6,182,212,0.1)] border border-transparent transition-all rounded-xl text-sm font-bold h-full whitespace-nowrap">
-                            <Award className="w-4 h-4" /> Advisory Board
+                        <TabsTrigger value="advisory" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-500/20 data-[state=active]:shadow-[0_0_20px_rgba(6,182,212,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
+                            <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span className="hidden sm:inline">Advisory Board</span><span className="sm:hidden">Advisory</span>
                         </TabsTrigger>
-                        <TabsTrigger value="events" className="flex items-center gap-2.5 px-6 py-2.5 data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:border-purple-500/20 data-[state=active]:shadow-[0_0_20px_rgba(168,85,247,0.1)] border border-transparent transition-all rounded-xl text-sm font-bold h-full whitespace-nowrap">
-                            <Calendar className="w-4 h-4" /> Club Events
+                        <TabsTrigger value="events" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:border-purple-500/20 data-[state=active]:shadow-[0_0_20px_rgba(168,85,247,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
+                            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Events
                         </TabsTrigger>
-                        <TabsTrigger value="contacts" className="flex items-center gap-2.5 px-6 py-2.5 data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 data-[state=active]:border-amber-500/20 data-[state=active]:shadow-[0_0_20px_rgba(245,158,11,0.1)] border border-transparent transition-all rounded-xl text-sm font-bold h-full whitespace-nowrap">
-                            <Inbox className="w-4 h-4" /> Submissions
+                        <TabsTrigger value="contacts" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 data-[state=active]:border-amber-500/20 data-[state=active]:shadow-[0_0_20px_rgba(245,158,11,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
+                            <Inbox className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span className="hidden sm:inline">Submissions</span><span className="sm:hidden">Inbox</span>
                             {contacts.length > 0 && (
-                                <span className="ml-1 px-1.5 py-0.5 rounded-full bg-amber-500/20 text-[10px] text-amber-400 font-black border border-amber-500/20">
+                                <span className="ml-0.5 sm:ml-1 px-1 sm:px-1.5 py-0.5 rounded-full bg-amber-500/20 text-[9px] sm:text-[10px] text-amber-400 font-black border border-amber-500/20">
                                     {contacts.length}
                                 </span>
                             )}
@@ -283,7 +283,7 @@ const AdminPage = () => {
                                     </CardHeader>
                                     <CardContent>
                                         <form onSubmit={handleSubmitBoard} className="space-y-5">
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <Label>Full Name</Label>
                                                     <Input value={boardForm.name} onChange={e => setBoardForm({ ...boardForm, name: e.target.value })} placeholder="Jane Doe" required />
@@ -402,7 +402,7 @@ const AdminPage = () => {
                                     </CardHeader>
                                     <CardContent>
                                         <form onSubmit={handleSubmitAdvisory} className="space-y-5">
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <Label>Advisor Name</Label>
                                                     <Input value={advisoryForm.name} onChange={e => setAdvisoryForm({ ...advisoryForm, name: e.target.value })} placeholder="Dr. Smith" required />
@@ -529,7 +529,7 @@ const AdminPage = () => {
                                                 <Label>Event Description</Label>
                                                 <Textarea value={eventForm.description} onChange={e => setEventForm({ ...eventForm, description: e.target.value })} placeholder="A briefing about the event agenda..." className="min-h-[100px]" required />
                                             </div>
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <Label>Date Label</Label>
                                                     <Input value={eventForm.date} onChange={e => setEventForm({ ...eventForm, date: e.target.value })} placeholder="Nov 15, 2024" required />
@@ -539,7 +539,7 @@ const AdminPage = () => {
                                                     <Input value={eventForm.time} onChange={e => setEventForm({ ...eventForm, time: e.target.value })} placeholder="9:00 AM onwards" required />
                                                 </div>
                                             </div>
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <Label>Location</Label>
                                                     <Input value={eventForm.location} onChange={e => setEventForm({ ...eventForm, location: e.target.value })} placeholder="Main Seminar Hall" required />
