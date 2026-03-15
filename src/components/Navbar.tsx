@@ -63,8 +63,8 @@ const Navbar = () => {
                                 Join Discord
                             </a>
                         </Button>
-                        <Button size="sm" className="hidden sm:flex text-xs bg-primary hover:bg-primary/90 text-white rounded-lg gap-1.5 h-8 px-4">
-                            Contact <ArrowUpRight className="w-3.5 h-3.5" />
+                        <Button size="sm" asChild className="hidden sm:flex text-xs bg-primary hover:bg-primary/90 text-white rounded-lg gap-1.5 h-8 px-4">
+                            <Link to="/contact">Contact <ArrowUpRight className="w-3.5 h-3.5" /></Link>
                         </Button>
                         <button
                             onClick={() => setOpen(!open)}
@@ -110,7 +110,9 @@ const Navbar = () => {
                                     Join Discord
                                 </a>
                             </Button>
-                            <Button size="sm" className="flex-1 text-xs bg-primary text-white rounded-lg h-9">Contact</Button>
+                            <Button size="sm" asChild className="flex-1 text-xs bg-primary text-white rounded-lg h-9">
+                                <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
+                            </Button>
                         </div>
                     </motion.div>
                 )}
