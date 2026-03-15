@@ -247,25 +247,27 @@ const AdminPage = () => {
                 </div>
 
                 <Tabs defaultValue="board" className="w-full space-y-6 sm:space-y-10">
-                    <TabsList className="flex items-center gap-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 h-auto sm:h-16 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                        <TabsTrigger value="board" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/20 data-[state=active]:shadow-[0_0_20px_rgba(16,185,129,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
-                            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span className="hidden xs:inline">Board</span><span className="hidden sm:inline"> Members</span><span className="xs:hidden">Board</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="advisory" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-500/20 data-[state=active]:shadow-[0_0_20px_rgba(6,182,212,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
-                            <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span className="hidden sm:inline">Advisory Board</span><span className="sm:hidden">Advisory</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="events" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:border-purple-500/20 data-[state=active]:shadow-[0_0_20px_rgba(168,85,247,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
-                            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Events
-                        </TabsTrigger>
-                        <TabsTrigger value="contacts" className="flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-2.5 data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 data-[state=active]:border-amber-500/20 data-[state=active]:shadow-[0_0_20px_rgba(245,158,11,0.1)] border border-transparent transition-all rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">
-                            <Inbox className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span className="hidden sm:inline">Submissions</span><span className="sm:hidden">Inbox</span>
-                            {contacts.length > 0 && (
-                                <span className="ml-0.5 sm:ml-1 px-1 sm:px-1.5 py-0.5 rounded-full bg-amber-500/20 text-[9px] sm:text-[10px] text-amber-400 font-black border border-amber-500/20">
-                                    {contacts.length}
-                                </span>
-                            )}
-                        </TabsTrigger>
-                    </TabsList>
+                    <div className="flex justify-center">
+                        <TabsList className="flex items-center gap-2 bg-secondary/30 backdrop-blur-3xl border border-white/10 h-16 p-2 rounded-2xl">
+                            <TabsTrigger value="board" className="w-14 h-12 flex items-center justify-center data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/20 data-[state=active]:shadow-[0_0_20px_rgba(16,185,129,0.15)] border border-transparent transition-all rounded-xl hover:bg-white/5 group">
+                                <Users className="w-5 h-5 transition-transform group-hover:scale-110" />
+                            </TabsTrigger>
+                            <TabsTrigger value="advisory" className="w-14 h-12 flex items-center justify-center data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-500/20 data-[state=active]:shadow-[0_0_20px_rgba(6,182,212,0.15)] border border-transparent transition-all rounded-xl hover:bg-white/5 group">
+                                <Award className="w-5 h-5 transition-transform group-hover:scale-110" />
+                            </TabsTrigger>
+                            <TabsTrigger value="events" className="w-14 h-12 flex items-center justify-center data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:border-purple-500/20 data-[state=active]:shadow-[0_0_20px_rgba(168,85,247,0.15)] border border-transparent transition-all rounded-xl hover:bg-white/5 group">
+                                <Calendar className="w-5 h-5 transition-transform group-hover:scale-110" />
+                            </TabsTrigger>
+                            <TabsTrigger value="contacts" className="w-14 h-12 flex items-center justify-center relative data-[state=active]:bg-amber-500/10 data-[state=active]:text-amber-400 data-[state=active]:border-amber-500/20 data-[state=active]:shadow-[0_0_20px_rgba(245,158,11,0.15)] border border-transparent transition-all rounded-xl hover:bg-white/5 group">
+                                <Inbox className="w-5 h-5 transition-transform group-hover:scale-110" />
+                                {contacts.length > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] text-black font-black shadow-lg shadow-amber-500/20">
+                                        {contacts.length}
+                                    </span>
+                                )}
+                            </TabsTrigger>
+                        </TabsList>
+                    </div>
 
                     <AnimatePresence mode="wait">
                         <TabsContent value="board" className="space-y-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
