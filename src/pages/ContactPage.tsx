@@ -47,48 +47,48 @@ const ContactPage = () => {
     };
 
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center font-mono relative overflow-hidden bg-[#0a0a0a]">
-            {/* Rust themed grid background */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ce412b10_1px,transparent_1px),linear-gradient(to_bottom,#ce412b10_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        <div className="min-h-screen pt-24 pb-12 px-4 flex items-center justify-center font-mono relative overflow-hidden bg-background">
+            {/* Tech grid background */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d410_1px,transparent_1px),linear-gradient(to_bottom,#06b6d410_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="relative z-10 w-full max-w-lg"
             >
-                <div className="bg-[#151515] border border-[#ce412b]/30 rounded-lg p-1 shadow-2xl shadow-[#ce412b]/10">
-                    <div className="bg-[#111] rounded-md overflow-hidden">
+                <div className="bg-secondary/20 border border-cyan-500/30 rounded-lg p-1 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+                    <div className="bg-background/80 rounded-md overflow-hidden">
 
                         {/* Terminal Header */}
-                        <div className="bg-[#151515] px-4 py-3 border-b border-[#ce412b]/20 flex items-center justify-between">
+                        <div className="bg-secondary/40 px-4 py-3 border-b border-cyan-500/20 flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <Terminal className="w-4 h-4 text-[#ce412b]" />
-                                <span className="text-[11px] text-[#ce412b] font-bold tracking-[0.2em] uppercase">Contact_Module.rs</span>
+                                <Terminal className="w-4 h-4 text-cyan-400" />
+                                <span className="text-[11px] text-cyan-400 font-bold tracking-[0.2em] uppercase">Contact_Module.mic</span>
                             </div>
                             <div className="flex gap-1.5 opacity-60">
-                                <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-                                <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/50"></div>
                             </div>
                         </div>
 
                         {/* Status Bar */}
-                        <div className="bg-[#ce412b]/5 px-4 py-2 text-[11px] text-[#ce412b]/70 flex items-center gap-2 border-b border-[#ce412b]/10 font-bold tracking-wide">
+                        <div className="bg-cyan-500/5 px-4 py-2 text-[11px] text-cyan-400/70 flex items-center gap-2 border-b border-cyan-500/10 font-bold tracking-wide">
                             <Cpu className="w-3.5 h-3.5" />
                             {isTyping ? (
-                                <span className="flex items-center gap-2 text-[#ce412b]">
+                                <span className="flex items-center gap-2 text-cyan-400">
                                     <Loader2 className="w-3.5 h-3.5 animate-spin" /> Compiling input_
                                 </span>
                             ) : submitting ? (
-                                <span className="flex items-center gap-2 text-[#ce412b]">
+                                <span className="flex items-center gap-2 text-cyan-400">
                                     <Loader2 className="w-3.5 h-3.5 animate-spin" /> Executing memory safe push_
                                 </span>
                             ) : errorMsg ? (
-                                <span className="flex items-center gap-2 text-red-500">
+                                <span className="flex items-center gap-2 text-red-400">
                                     <AlertCircle className="w-3.5 h-3.5" /> panic!: {errorMsg}
                                 </span>
                             ) : success ? (
-                                <span className="text-green-500">Process exited with code 0 (Success)</span>
+                                <span className="text-emerald-400">Process exited with code 0 (Success)</span>
                             ) : (
                                 <span>Awaiting user input_</span>
                             )}
@@ -101,13 +101,13 @@ const ContactPage = () => {
                                 {/* Name */}
                                 <div className="space-y-1.5">
                                     <label className="text-xs text-muted-foreground flex items-center gap-2">
-                                        <span className="text-[#ce412b]">fn</span> get_name() -&gt; String
+                                        <span className="text-cyan-400">fn</span> get_name() -&gt; String
                                     </label>
                                     <Input
                                         required
                                         value={formData.name}
                                         onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                        className="font-mono bg-[#151515] border-[#ce412b]/20 focus-visible:ring-[#ce412b]/40 focus-visible:border-[#ce412b] rounded text-white h-11"
+                                        className="font-mono bg-background/50 border-cyan-500/20 focus-visible:ring-cyan-500/40 focus-visible:border-cyan-500 rounded text-foreground h-11"
                                         placeholder='"John Doe"'
                                     />
                                 </div>
@@ -115,13 +115,13 @@ const ContactPage = () => {
                                 {/* Roll Number */}
                                 <div className="space-y-1.5">
                                     <label className="text-xs text-muted-foreground flex items-center gap-2 mt-4">
-                                        <span className="text-[#ce412b]">let</span> roll_number: <span className="text-blue-400">u32</span>
+                                        <span className="text-cyan-400">let</span> roll_number: <span className="text-emerald-400">u32</span>
                                     </label>
                                     <Input
                                         required
                                         value={formData.rollnumber}
                                         onChange={e => setFormData({ ...formData, rollnumber: e.target.value })}
-                                        className="font-mono bg-[#151515] border-[#ce412b]/20 focus-visible:ring-[#ce412b]/40 focus-visible:border-[#ce412b] rounded text-white h-11"
+                                        className="font-mono bg-background/50 border-cyan-500/20 focus-visible:ring-cyan-500/40 focus-visible:border-cyan-500 rounded text-foreground h-11"
                                         placeholder='"21X..."'
                                     />
                                 </div>
@@ -129,14 +129,14 @@ const ContactPage = () => {
                                 {/* Phone Number */}
                                 <div className="space-y-1.5">
                                     <label className="text-xs text-muted-foreground flex items-center gap-2 mt-4">
-                                        <span className="text-[#ce412b]">let mut</span> phone: <span className="text-blue-400">String</span>
+                                        <span className="text-cyan-400">let mut</span> phone: <span className="text-emerald-400">String</span>
                                     </label>
                                     <Input
                                         required
                                         type="tel"
                                         value={formData.phone}
                                         onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                        className="font-mono bg-[#151515] border-[#ce412b]/20 focus-visible:ring-[#ce412b]/40 focus-visible:border-[#ce412b] rounded text-white h-11"
+                                        className="font-mono bg-background/50 border-cyan-500/20 focus-visible:ring-cyan-500/40 focus-visible:border-cyan-500 rounded text-foreground h-11"
                                         placeholder='"9876543210"'
                                     />
                                 </div>
@@ -144,14 +144,14 @@ const ContactPage = () => {
                                 {/* College Email */}
                                 <div className="space-y-1.5">
                                     <label className="text-xs text-muted-foreground flex items-center gap-2 mt-4">
-                                        <span className="text-[#ce412b]">pub</span> email: Option&lt;<span className="text-blue-400">CollegeEmail</span>&gt;
+                                        <span className="text-cyan-400">pub</span> email: Option&lt;<span className="text-emerald-400">CollegeEmail</span>&gt;
                                     </label>
                                     <Input
                                         required
                                         type="email"
                                         value={formData.email}
                                         onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                        className="font-mono bg-[#151515] border-[#ce412b]/20 focus-visible:ring-[#ce412b]/40 focus-visible:border-[#ce412b] rounded text-white h-11"
+                                        className="font-mono bg-background/50 border-cyan-500/20 focus-visible:ring-cyan-500/40 focus-visible:border-cyan-500 rounded text-foreground h-11"
                                         placeholder='"student@snist.edu.in"'
                                     />
                                 </div>
@@ -159,9 +159,8 @@ const ContactPage = () => {
                                 <Button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full mt-6 bg-[#ce412b] hover:bg-[#a6301e] text-white font-mono rounded-lg h-12 tracking-[0.1em] text-[13px] font-bold transition-all relative overflow-hidden group border border-[#ce412b]"
+                                    className="w-full mt-6 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-black font-mono rounded-lg h-12 tracking-[0.1em] text-[13px] font-bold transition-all relative overflow-hidden group shadow-lg shadow-cyan-500/20 active:scale-[0.98]"
                                 >
-                                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                                     <span className="flex items-center justify-center gap-2 relative z-10 uppercase">
                                         {submitting ? (
                                             <><Loader2 className="w-4 h-4 animate-spin" /> Cargo Build --release</>
