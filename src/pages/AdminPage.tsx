@@ -9,15 +9,10 @@ import {
     Loader2,
     LogOut,
     MapPin,
-    Clock,
-    ShieldCheck,
     Github,
     Linkedin,
-    MessageSquare,
     Inbox,
     Terminal,
-    Cpu,
-    AlertCircle,
     LayoutDashboard,
     ChevronRight,
     Search,
@@ -29,12 +24,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/lib/api';
-import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/AuthContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { uploadImage } from '@/lib/supabase';
 import { toast } from 'sonner';
+
+interface TabProps {
+    id: string;
+    label: string;
+    icon: any;
+    count: number;
+    color: string;
+}
 
 const AdminPage = () => {
     const { token, logout, user } = useAuth();
@@ -51,10 +53,6 @@ const AdminPage = () => {
     const [boardForm, setBoardForm] = useState({ name: '', role: '', image: '', github: '', linkedin: '', discord: '' });
     const [advisoryForm, setAdvisoryForm] = useState({ name: '', role: '', image: '', github: '', linkedin: '', discord: '' });
     const [eventForm, setEventForm] = useState({ title: '', description: '', date: '', location: '', time: '', image: '', tags: '', status: 'UPCOMING' });
-
-    const [boardFile, setBoardFile] = useState<File | null>(null);
-    const [advisoryFile, setAdvisoryFile] = useState<File | null>(null);
-    const [eventFile, setEventFile] = useState<File | null>(null);
 
     const boardFileRef = useRef<HTMLInputElement>(null);
     const advisoryFileRef = useRef<HTMLInputElement>(null);
@@ -100,13 +98,13 @@ const AdminPage = () => {
         toast.promise(promise, {
             loading: 'Deallocating memory...',
             success: 'Module deallocated successfully',
-            error: (err) => err.message || 'Failed to delete module'
+            error: (err: any) => err.message || 'Failed to delete module'
         });
 
         try { await promise; } finally { setLoading(false); }
     };
 
-    const tabs = [
+    const tabs: TabProps[] = [
         { id: 'board', label: 'Board_Members.rs', icon: Users, count: boardMembers.length, color: 'text-emerald-400' },
         { id: 'advisory', label: 'Advisory_Board.rs', icon: Award, count: advisory.length, color: 'text-cyan-400' },
         { id: 'events', label: 'Event_Controller.rs', icon: Calendar, count: events.length, color: 'text-purple-400' },
@@ -130,14 +128,14 @@ const AdminPage = () => {
                             </div>
                             <div>
                                 <h2 className="text-sm font-bold text-[#ce412b] tracking-wider uppercase">Admin_Root</h2>
-                                <p className="text-[10px] text-[#ce412b]/60 font-bold truncate max-w-[150px]">{user?.email}</p>
+                                <p className="text-[10px] text-[#ce412b]/60 font-bold truncate max-w-[150px]">{user?.email || 'authenticated_user'}</p>
                             </div>
                         </div>
                     </div>
 
                     <nav className="flex-1 space-y-2">
                         <p className="text-[10px] font-black text-[#ce412b]/40 uppercase tracking-[0.2em] mb-4 px-2">Navigation_Tree</p>
-                        {tabs.map((tab) => (
+                        {tabs.map((tab: TabProps) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
@@ -229,8 +227,7 @@ const AdminPage = () => {
                                     form={boardForm}
                                     setForm={setBoardForm}
                                     fileRef={boardFileRef}
-                                    setFile={setBoardFile}
-                                    onDelete={(id) => handleDelete('board', id)}
+                                    onDelete={(id: string) => handleDelete('board', id)}
                                     fetchData={fetchData}
                                     token={token}
                                     loading={loading}
@@ -243,8 +240,7 @@ const AdminPage = () => {
                                     form={advisoryForm}
                                     setForm={setAdvisoryForm}
                                     fileRef={advisoryFileRef}
-                                    setFile={setAdvisoryFile}
-                                    onDelete={(id) => handleDelete('advisory', id)}
+                                    onDelete={(id: string) => handleDelete('advisory', id)}
                                     fetchData={fetchData}
                                     token={token}
                                     loading={loading}
@@ -257,8 +253,7 @@ const AdminPage = () => {
                                     form={eventForm}
                                     setForm={setEventForm}
                                     fileRef={eventFileRef}
-                                    setFile={setEventFile}
-                                    onDelete={(id) => handleDelete('event', id)}
+                                    onDelete={(id: string) => handleDelete('event', id)}
                                     fetchData={fetchData}
                                     token={token}
                                     loading={loading}
@@ -268,7 +263,7 @@ const AdminPage = () => {
                             {activeTab === 'contacts' && (
                                 <ContactsTab
                                     contacts={contacts}
-                                    onDelete={(id) => handleDelete('contact', id)}
+                                    onDelete={(id: string) => handleDelete('contact', id)}
                                 />
                             )}
                         </motion.div>
@@ -281,7 +276,7 @@ const AdminPage = () => {
 
 /* --- TAB COMPONENTS --- */
 
-const ModuleHeader = ({ title, icon: Icon, color = "text-[#ce412b]" }) => (
+const ModuleHeader = ({ title, icon: Icon, color = "text-[#ce412b]" }: any) => (
     <div className="bg-[#151515] px-4 py-3 border-b border-[#ce412b]/20 flex items-center justify-between rounded-t-lg">
         <div className="flex items-center gap-2">
             <Icon className={cn("w-4 h-4", color)} />
@@ -295,8 +290,8 @@ const ModuleHeader = ({ title, icon: Icon, color = "text-[#ce412b]" }) => (
     </div>
 );
 
-const BoardTab = ({ members, form, setForm, fileRef, setFile, onDelete, fetchData, token, loading }) => {
-    const handleSubmit = async (e) => {
+const BoardTab = ({ members, form, setForm, fileRef, onDelete, fetchData, token, loading }: any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!token) return;
         const submitFn = async () => {
@@ -354,7 +349,7 @@ const BoardTab = ({ members, form, setForm, fileRef, setFile, onDelete, fetchDat
             </Card>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {members.map(member => (
+                {members.map((member: any) => (
                     <motion.div
                         key={member.id}
                         layout
@@ -367,7 +362,7 @@ const BoardTab = ({ members, form, setForm, fileRef, setFile, onDelete, fetchDat
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
                             </Button>
-                            <Avatar size="lg" className="rounded-lg border border-[#ce412b]/20">
+                            <Avatar className="rounded-lg border border-[#ce412b]/20 h-12 w-12">
                                 <AvatarImage src={member.image} />
                                 <AvatarFallback className="bg-[#151515] text-[#ce412b]">{member.name[0]}</AvatarFallback>
                             </Avatar>
@@ -387,8 +382,8 @@ const BoardTab = ({ members, form, setForm, fileRef, setFile, onDelete, fetchDat
     );
 };
 
-const AdvisoryTab = ({ advisors, form, setForm, fileRef, setFile, onDelete, fetchData, token, loading }) => {
-    const handleSubmit = async (e) => {
+const AdvisoryTab = ({ advisors, form, setForm, fileRef, onDelete, fetchData, token, loading }: any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!token) return;
         const submitFn = async () => {
@@ -442,7 +437,7 @@ const AdvisoryTab = ({ advisors, form, setForm, fileRef, setFile, onDelete, fetc
             </Card>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {advisors.map(member => (
+                {advisors.map((member: any) => (
                     <motion.div
                         key={member.id}
                         layout
@@ -455,7 +450,7 @@ const AdvisoryTab = ({ advisors, form, setForm, fileRef, setFile, onDelete, fetc
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
                             </Button>
-                            <Avatar size="lg" className="rounded-lg border border-[#ce412b]/20">
+                            <Avatar className="rounded-lg border border-[#ce412b]/20 h-12 w-12">
                                 <AvatarImage src={member.image} />
                                 <AvatarFallback>{member.name[0]}</AvatarFallback>
                             </Avatar>
@@ -471,14 +466,14 @@ const AdvisoryTab = ({ advisors, form, setForm, fileRef, setFile, onDelete, fetc
     );
 };
 
-const EventsTab = ({ events, form, setForm, fileRef, setFile, onDelete, fetchData, token, loading }) => {
-    const handleSubmit = async (e) => {
+const EventsTab = ({ events, form, setForm, fileRef, onDelete, fetchData, token, loading }: any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!token) return;
         const submitFn = async () => {
             let imageUrl = form.image;
             if (fileRef.current?.files?.[0]) imageUrl = await uploadImage(fileRef.current.files[0]);
-            const tagsArray = form.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+            const tagsArray = form.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag !== '');
             await api.createEvent({ ...form, image: imageUrl, tags: tagsArray }, token);
             setForm({ title: '', description: '', date: '', location: '', time: '', image: '', tags: '', status: 'UPCOMING' });
             if (fileRef.current) fileRef.current.value = '';
@@ -554,7 +549,7 @@ const EventsTab = ({ events, form, setForm, fileRef, setFile, onDelete, fetchDat
             </Card>
 
             <div className="space-y-4">
-                {events.map(event => (
+                {events.map((event: any) => (
                     <div key={event.id} className="bg-[#111111] border border-white/5 rounded-lg p-5 flex items-start gap-4 hover:border-[#ce412b]/30 transition-all group">
                         <div className="w-20 h-20 bg-[#0a0a0a] border border-white/5 rounded-lg overflow-hidden shrink-0">
                             <img src={event.image} alt="" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -586,10 +581,10 @@ const EventsTab = ({ events, form, setForm, fileRef, setFile, onDelete, fetchDat
     );
 };
 
-const ContactsTab = ({ contacts, onDelete }) => (
+const ContactsTab = ({ contacts, onDelete }: any) => (
     <div className="space-y-6 animate-in fade-in duration-500">
         <div className="grid gap-4">
-            {contacts.map(contact => (
+            {contacts.map((contact: any) => (
                 <div key={contact.id} className="bg-[#111111] border border-[#ce412b]/20 rounded-lg overflow-hidden flex flex-col hover:shadow-2xl hover:shadow-[#ce412b]/5 transition-all">
                     <div className="bg-[#ce412b]/5 px-4 py-2 border-b border-[#ce412b]/10 flex items-center justify-between">
                         <div className="flex items-center gap-2">
