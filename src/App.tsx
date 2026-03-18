@@ -34,7 +34,7 @@ const Footer = () => (
             <span className="font-semibold text-sm">MIC</span>
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-            Machine Intelligence Club — where biology meets computation.
+            Machine Intelligence Club — Learn, Explore, Innovate.
           </p>
         </div>
         <div>
@@ -59,7 +59,7 @@ const Footer = () => (
       </div>
       <Separator className="mb-6" />
       <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-muted-foreground">
-        <p>© 2024 Machine Intelligence Club</p>
+        <p>© 2026 Machine Intelligence Club</p>
         <div className="flex gap-4">
           <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
           <a href="#" className="hover:text-foreground transition-colors">Terms</a>

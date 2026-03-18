@@ -33,6 +33,28 @@ const BoardMemberSkeleton = () => (
     </div>
 );
 
+const rolePriority: Record<string, number> = {
+    "PRESIDENT": 1,
+    "VICE PRESIDENT": 2,
+    "GENERAL SECRETARY": 3,
+    "JOINT SECRETARY": 4,
+    "TREASURER": 5,
+    "TECHNICAL LEAD": 6,
+    "TECH LEAD": 7,
+    "DOCUMENTATION HEAD":8,
+    "DOCUMENTATION LEAD": 9,
+    "EVENT MANAGEMENT LEAD": 10,
+    "ORGANIZING HEAD": 11,
+    "DEPUTY ORGANIZING HEAD": 12,
+    "PUBLICITY HEAD": 13,
+    "DEPUTY PUBLICITY HEAD": 14,
+    "RESEARCH AND DEVELOPMENT": 15,
+    "DESIGN LEAD": 16,
+    "MARKETING LEAD": 17,
+    "OUTREACH LEAD": 18,
+    "LEAD": 19,
+};
+
 const BoardMembers = () => {
     const [boardMembers, setBoardMembers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,7 +63,24 @@ const BoardMembers = () => {
         const fetchMembers = async () => {
             try {
                 const data = await api.getBoardMembers();
-                setBoardMembers(Array.isArray(data) ? data : []);
+                if (Array.isArray(data)) {
+                    // Sort by priority map (Case-insensitive)
+                    const sorted = [...data].sort((a, b) => {
+                        const roleA = a.role ? a.role.toUpperCase().trim() : "";
+                        const roleB = b.role ? b.role.toUpperCase().trim() : "";
+
+                        const priorityA = rolePriority[roleA] || 100;
+                        const priorityB = rolePriority[roleB] || 100;
+
+                        if (priorityA !== priorityB) {
+                            return priorityA - priorityB;
+                        }
+                        return a.name.localeCompare(b.name); // Secondary sort by name
+                    });
+                    setBoardMembers(sorted);
+                } else {
+                    setBoardMembers([]);
+                }
             } catch (error) {
                 console.error("Failed to fetch board members:", error);
             } finally {

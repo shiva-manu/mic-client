@@ -14,7 +14,10 @@ import {
     Github,
     Linkedin,
     MessageSquare,
-    Inbox
+    Inbox,
+    ExternalLink,
+    Pencil,
+    Check
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,7 +44,9 @@ const AdminPage = () => {
 
     const [boardForm, setBoardForm] = useState({ name: '', role: '', image: '', github: '', linkedin: '', discord: '' });
     const [advisoryForm, setAdvisoryForm] = useState({ name: '', role: '', image: '', github: '', linkedin: '', discord: '' });
-    const [eventForm, setEventForm] = useState({ title: '', description: '', date: '', location: '', time: '', image: '', tags: '', status: 'UPCOMING' });
+    const [eventForm, setEventForm] = useState({ title: '', description: '', date: '', location: '', time: '', image: '', tags: '', status: 'UPCOMING', feedbackFormUrl: '' });
+    const [editingFeedbackUrl, setEditingFeedbackUrl] = useState<string | null>(null);
+    const [editingFeedbackUrlValue, setEditingFeedbackUrlValue] = useState('');
 
     const [boardFile, setBoardFile] = useState<File | null>(null);
     const [advisoryFile, setAdvisoryFile] = useState<File | null>(null);
@@ -146,9 +151,9 @@ const AdminPage = () => {
                 imageUrl = await uploadImage(eventFile);
             }
             const tagsArray = eventForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-            const data = { ...eventForm, image: imageUrl, tags: tagsArray };
+            const data = { ...eventForm, image: imageUrl, tags: tagsArray, feedbackFormUrl: eventForm.feedbackFormUrl || null };
             await api.createEvent(data, token);
-            setEventForm({ title: '', description: '', date: '', location: '', time: '', image: '', tags: '', status: 'UPCOMING' });
+            setEventForm({ title: '', description: '', date: '', location: '', time: '', image: '', tags: '', status: 'UPCOMING', feedbackFormUrl: '' });
             setEventFile(null);
             if (eventFileRef.current) eventFileRef.current.value = '';
             fetchData();
@@ -192,6 +197,23 @@ const AdminPage = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleSaveFeedbackUrl = async (eventId: string) => {
+        if (!token) return;
+
+        const promise = (async () => {
+            await api.updateEvent(eventId, { feedbackFormUrl: editingFeedbackUrlValue }, token);
+            setEditingFeedbackUrl(null);
+            setEditingFeedbackUrlValue('');
+            fetchData();
+        })();
+
+        toast.promise(promise, {
+            loading: 'Updating feedback URL...',
+            success: 'Feedback URL updated!',
+            error: 'Failed to update URL'
+        });
     };
 
     return (
@@ -568,6 +590,11 @@ const AdminPage = () => {
                                                 <Input value={eventForm.tags} onChange={e => setEventForm({ ...eventForm, tags: e.target.value })} placeholder="Artificial Intelligence, Coding, SNIST" />
                                                 <p className="text-[10px] text-muted-foreground">Example: tech, ai, snist</p>
                                             </div>
+                                            <div className="space-y-2">
+                                                <Label>Feedback Form URL (optional)</Label>
+                                                <Input value={eventForm.feedbackFormUrl} onChange={e => setEventForm({ ...eventForm, feedbackFormUrl: e.target.value })} placeholder="https://docs.google.com/forms/d/e/..." />
+                                                <p className="text-[10px] text-muted-foreground">Paste a Google Form link. Shown on archive page for completed events.</p>
+                                            </div>
                                             <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white h-11 transition-all shadow-lg shadow-purple-600/10 font-bold" disabled={loading}>
                                                 {loading ? (
                                                     <div className="flex items-center gap-2">
@@ -638,6 +665,40 @@ const AdminPage = () => {
                                                                 <div className="flex items-center gap-1.5 text-[11px] text-foreground/80 font-medium">
                                                                     <MapPin className="w-3.5 h-3.5 text-purple-400" /> {event.location}
                                                                 </div>
+                                                            </div>
+
+                                                            {/* Feedback Form URL */}
+                                                            <div className="flex items-center gap-2 pt-2 border-t border-white/5 mt-1">
+                                                                {editingFeedbackUrl === event.id ? (
+                                                                    <div className="flex items-center gap-2 w-full">
+                                                                        <Input
+                                                                            value={editingFeedbackUrlValue}
+                                                                            onChange={e => setEditingFeedbackUrlValue(e.target.value)}
+                                                                            placeholder="https://docs.google.com/forms/d/e/..."
+                                                                            className="h-7 text-xs bg-white/[0.03] border-white/10 flex-1"
+                                                                        />
+                                                                        <Button size="sm" className="h-7 px-2 text-xs bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/20" onClick={() => handleSaveFeedbackUrl(event.id)}>
+                                                                            <Check className="w-3 h-3" />
+                                                                        </Button>
+                                                                        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => { setEditingFeedbackUrl(null); setEditingFeedbackUrlValue(''); }}>
+                                                                            Cancel
+                                                                        </Button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center gap-2 text-[11px]">
+                                                                        <ExternalLink className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                                                                        {event.feedbackFormUrl ? (
+                                                                            <a href={event.feedbackFormUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline truncate max-w-[200px]">
+                                                                                Feedback Form
+                                                                            </a>
+                                                                        ) : (
+                                                                            <span className="text-muted-foreground/50">No feedback form</span>
+                                                                        )}
+                                                                        <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px] text-muted-foreground hover:text-foreground" onClick={() => { setEditingFeedbackUrl(event.id); setEditingFeedbackUrlValue(event.feedbackFormUrl || ''); }}>
+                                                                            <Pencil className="w-3 h-3" />
+                                                                        </Button>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>

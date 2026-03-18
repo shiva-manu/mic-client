@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { MapPin, Calendar } from 'lucide-react';
+import { MapPin, Calendar, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import type { Easing } from "framer-motion";
@@ -110,10 +110,25 @@ const CompletedEventsPage = () => {
                                             </span>
                                             <h3 className="font-semibold text-lg text-foreground/70 group-hover:text-foreground transition-colors mb-1">{event.title}</h3>
                                             <p className="text-sm text-muted-foreground leading-relaxed mb-4">{event.description}</p>
-                                            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+                                            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mb-4">
                                                 <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</span>
                                                 <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.location}</span>
                                             </div>
+
+                                            {/* Feedback Button - links to external Google Form */}
+                                            {event.feedbackFormUrl && (
+                                                <div>
+                                                    <a
+                                                        href={event.feedbackFormUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-1.5 px-4 h-8 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-emerald-600/80 to-cyan-600/80 hover:from-emerald-500 hover:to-cyan-500 shadow-lg shadow-emerald-600/10 transition-all"
+                                                    >
+                                                        <ExternalLink className="w-3.5 h-3.5" />
+                                                        Give Feedback
+                                                    </a>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -127,4 +142,3 @@ const CompletedEventsPage = () => {
 };
 
 export default CompletedEventsPage;
-

@@ -155,6 +155,18 @@ export const api = {
         if (!res.ok) throw new Error('Failed to delete event');
         return res.json();
     },
+    updateEvent: async (id: string, data: any, token: string) => {
+        const res = await fetch(`${API_BASE_URL}/events/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('Failed to update event');
+        return res.json();
+    },
 
     // AI
     chatAI: async (messages: any[]) => {

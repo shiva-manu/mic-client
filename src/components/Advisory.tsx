@@ -151,7 +151,7 @@ const Advisory = () => {
 
                         <div className="space-y-8">
                             {[
-                                { label: "Establishment", value: "2024", subtitle: "Founded on excellence" },
+                                { label: "Establishment", value: "2026", subtitle: "Founded on excellence" },
                                 { label: "Global Presence", value: "Panelist Network", subtitle: "Across top universities" },
                                 { label: "Core Values", value: "Integrity & AI", subtitle: "Guiding principles" },
                             ].map((stat, i) => (

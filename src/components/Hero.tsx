@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronRight } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+
 import AgentModel from "@/components/AgentModel";
 
 /* ── Typewriter ── */
@@ -29,7 +30,7 @@ const useTypewriter = (words: string[], typingSpeed = 80, deletingSpeed = 40, pa
 };
 
 /* ── Marquee logos ── */
-const partners = ["TensorFlow", "PyTorch", "OpenAI", "Hugging Face", "Google Cloud", "IEEE", "SNIST"];
+const partners = ["TensorFlow", "PyTorch", "OpenAI", "Hugging Face", "Google Cloud", "IEEE", "SNIST", "OPENCLAW", "CLAUDE CODE", "OPENCODE",];
 const Marquee = () => (
     <div className="relative overflow-hidden py-6 border-t border-border/50">
         <div className="flex animate-[scroll_20s_linear_infinite] gap-16 whitespace-nowrap">
@@ -61,11 +62,11 @@ const Hero = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <Link to="/events" className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-secondary/50 px-3.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors mb-8 group">
+                    {/* <Link to="/events" className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-secondary/50 px-3.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors mb-8 group">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         Eco-ML Hackathon is live
                         <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
+                    </Link> */}
                 </motion.div>
 
                 {/* Title */}
@@ -88,8 +89,7 @@ const Hero = () => {
                     transition={{ delay: 0.35, duration: 0.6 }}
                     className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed"
                 >
-                    Where biology meets computation. We build adaptive systems,
-                    run research-driven hackathons, and push the boundaries of AI.
+                    Surpass your limits. Right here. Right now.
                 </motion.p>
 
                 {/* CTAs */}
@@ -99,11 +99,20 @@ const Hero = () => {
                     transition={{ delay: 0.5, duration: 0.6 }}
                     className="flex flex-wrap justify-center gap-3"
                 >
-                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-xl h-11 px-6 text-sm font-medium shadow-lg shadow-primary/20">
-                        Explore Events <ArrowRight className="ml-2 w-4 h-4" />
+                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-xl h-11 px-6 text-sm font-medium shadow-lg shadow-primary/20 cursor-pointer" asChild>
+                        <Link to="/events">
+                            Explore Events <ArrowRight className="ml-2 w-4 h-4" />
+                        </Link>
                     </Button>
-                    <Button size="lg" variant="outline" className="rounded-xl h-11 px-6 text-sm font-medium border-border/60 text-muted-foreground hover:text-foreground">
-                        Join the Club
+                    <Button
+                        size="lg"
+                        variant="outline"
+                        className="rounded-xl h-11 px-6 text-sm font-medium border-border/60 text-muted-foreground hover:text-foreground cursor-pointer"
+                        asChild
+                    >
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfO1B66KrWr1IO2P97CBl_8Ni_eni3QxUE0SZjLVmySrIVUkQ/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
+                            Join the Club
+                        </a>
                     </Button>
                 </motion.div>
 
@@ -115,9 +124,9 @@ const Hero = () => {
                     className="flex justify-center gap-12 mt-16 text-center"
                 >
                     {[
-                        { value: "500+", label: "Members" },
-                        { value: "30+", label: "Projects" },
-                        { value: "2024", label: "Founded" },
+                        { value: "14", label: "Members" },
+                        { value: "1+", label: "Projects" },
+                        { value: "2026", label: "Founded" },
                     ].map((s, i) => (
                         <div key={i}>
                             <div className="text-2xl font-bold tracking-tight">{s.value}</div>
